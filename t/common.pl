@@ -44,11 +44,11 @@ sub main::tempdir
 }
 
 my %shell = (
-  tcsh => 'c_shell',
+  tcsh => 'tc_shell',
   csh  => 'c_shell',
-  bash => 'bourne_shell',
+  bash => 'bash_shell',
   sh   => 'bourne_shell',
-  zsh  => 'bourne_shell',
+  zsh  => 'z_shell',
 );
 
 sub get_guess
