@@ -30,6 +30,13 @@ sub comment
   $self;
 }
 
+sub shebang
+{
+  my($self, $location) = @_;
+  $self->{shebang} = $location;
+  $self;
+}
+
 sub _value_escape_csh
 {
   my $value = shift . '';
@@ -59,6 +66,14 @@ sub generate
   my($self, $shell) = @_;
 
   my $buffer = '';
+
+  if(exists $self->{shebang} && $shell->is_unix)
+  {
+    if(defined $self->{shebang})
+    { $buffer .= "#!" . $self->{shebang} . "\n" }
+    else
+    { $buffer .= "#!" . $shell->default_location . "\n" }
+  }
 
   foreach my $args (map { [@$_] } @{ $self->{commands} })
   {
