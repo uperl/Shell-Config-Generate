@@ -5,27 +5,21 @@ use constant number_of_shells => 7;
 use Test::More tests => (tests_per_shell * number_of_shells) + 3;
 use Shell::Config::Generate;
 use FindBin ();
+use Test::Differences;
 
 require "$FindBin::Bin/common.pl";
 
 tempdir();
 
 my $config = eval { Shell::Config::Generate->new };
-
+  
 isa_ok $config, 'Shell::Config::Generate';
 
-my $ret = eval { $config->comment( 'something interesting here' ) };
+my $ret = eval { $config->set_path( FOO_PATH1 => qw( foo bar baz ) ) };
 diag $@ if $@;
 isa_ok $ret, 'Shell::Config::Generate';
 
-$config->comment( "and with a \n exit ; new line " );
-$config->comment( "multiple line", "comment" );
-$config->comment( "comment with a trailing backslash: \\" );
-
-eval { $config->set( FOO_SIMPLE_SET => 'bar' ) };
-diag $@ if $@;
-
-foreach my $shell (qw( tcsh csh bash sh zsh command.com cmd.exe ))
+foreach my $shell (qw( tcsh csh bash sh zsh cmd.exe command.com ))
 {
   my $shell_path = find_shell($shell);
   SKIP: {
@@ -33,7 +27,7 @@ foreach my $shell (qw( tcsh csh bash sh zsh command.com cmd.exe ))
 
     my $env = get_env($config, $shell, $shell_path);
 
-    is $env->{FOO_SIMPLE_SET}, 'bar', "FOO_SIMPLE_SET = bar ($shell)";
+    eq_or_diff [split /;|:/, $env->{FOO_PATH1}], [qw( foo bar baz )], "FOO_PATH = foo bar baz";
   }
 }
 

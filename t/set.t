@@ -5,7 +5,6 @@ use constant number_of_shells => 7;
 use Test::More tests => (tests_per_shell * number_of_shells) + 3;
 use Shell::Config::Generate;
 use FindBin ();
-use Test::Differences;
 
 require "$FindBin::Bin/common.pl";
 

@@ -21,6 +21,15 @@ sub set
   $self;
 }
 
+sub set_path
+{
+  my($self, $name, @list) = @_;
+
+  push $self->{commands}, [ 'set_path', $name, @list ];
+
+  $self;
+}
+
 sub comment
 {
   my($self, @comments) = @_;
@@ -98,9 +107,17 @@ sub generate
   {
     my $command = shift @$args;
 
+    # rewrite set_path as set
+    if($command eq 'set_path')
+    {
+      $command = 'set';
+      my $name = shift @$args;
+      $args = [$name, join $shell->is_win32 ? ';' : ':', @$args];
+    }
+
     if($command eq 'set')
     {
-      my($name, $value) = map { $_ . '' } @$args;
+      my($name, $value) = @$args;
       if($shell->is_c)
       {
         $value = _value_escape_csh($value);
@@ -118,7 +135,6 @@ sub generate
       }
       else
       {
-        # FIXME
         die 'don\'t know how to "set" with ' . $shell->name;
       }
     }
@@ -135,7 +151,6 @@ sub generate
       }
       else
       {
-        # FIXME
         die 'don\'t know how to "comment" with ' . $shell->name;
       }
     }
