@@ -13,6 +13,8 @@ my $sep = $^O eq 'MSWin32' ? ';' : ':';
 sub main::find_shell
 {
   my $shell = shift;
+  return $shell if $shell eq 'cmd.exe' && $^O eq 'MSWin32' && Win32::IsWinNT();
+  return $shell if $shell eq 'command.com' && $^O eq 'MSWin32';
   foreach my $path (split $sep, $ENV{PATH})
   {
     my $full = File::Spec->catfile($path, $shell);
@@ -35,6 +37,7 @@ do {
     print Dumper(\%data);
   };
   close $fh;
+  #diag `cat $fn`;
 };
 
 sub main::tempdir
@@ -44,11 +47,13 @@ sub main::tempdir
 }
 
 my %shell = (
-  tcsh => 'tc_shell',
-  csh  => 'c_shell',
-  bash => 'bash_shell',
-  sh   => 'bourne_shell',
-  zsh  => 'z_shell',
+  tcsh          => 'tc_shell',
+  csh           => 'c_shell',
+  bash          => 'bash_shell',
+  sh            => 'bourne_shell',
+  zsh           => 'z_shell',
+  'command.com' => 'command_shell',
+  'cmd.exe'     => 'cmd_shell',
 );
 
 sub get_guess
@@ -63,11 +68,15 @@ sub main::get_env
   my $shell = get_guess(shift);
   my $shell_path = shift;
   
-  my $fn = File::Spec->catfile($dir, "foo");
+  my $fn = 'foo';
+  $fn .= ".bat" if $shell->is_command;
+  $fn .= ".cmd" if $shell->is_cmd;
+  $fn = File::Spec->catfile($dir, $fn);
   unlink $fn if -e $fn;
   do {
     open(my $fh, '>', $fn) || die "unable to write to $fn $!";
-    print $fh "#!$shell_path\n";
+    print $fh "#!$shell_path\n" if $shell->is_unix;
+    print $fh "\@echo off\n" if $shell->is_command || $shell->is_cmd;
     eval { print $fh $config->generate($shell) };
     diag $@ if $@;
     print $fh "$^X ", File::Spec->catfile($dir, 'dump.pl'), "\n";
@@ -78,7 +87,9 @@ sub main::get_env
 
   #diag `cat $fn`;  
   my $VAR1;
-  eval `$fn`;
+  my $output = `$fn`;
+  #diag $output;
+  eval $output;
   
   return $VAR1;
 }

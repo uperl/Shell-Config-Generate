@@ -45,6 +45,15 @@ sub _value_escape_sh
   $value;
 }
 
+sub _value_escape_win32
+{
+  my $value = shift . '';
+  $value =~ s/%/%%/g;
+  $value =~ s/([&^|<>])/^$1/g;
+  $value =~ s/\n/^\n\n/g;
+  $value;
+}
+
 sub generate
 {
   my($self, $shell) = @_;
@@ -68,6 +77,11 @@ sub generate
         $value = _value_escape_sh($value);
         $buffer .= "export $name='$value'\n";
       }
+      elsif($shell->is_cmd || $shell->is_command)
+      {
+        $value = _value_escape_win32($value);
+        $buffer .= "set $name=$value\n";
+      }
       else
       {
         # FIXME
@@ -80,6 +94,10 @@ sub generate
       if($shell->is_unix)
       {
         $buffer .= "# $_\n" for map { split /\n/, } @$args;
+      }
+      elsif($shell->is_cmd || $shell->is_command)
+      {
+        $buffer .= "rem $_\n" for map { split /\n/, } @$args;
       }
       else
       {
