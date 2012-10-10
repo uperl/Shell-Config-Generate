@@ -40,6 +40,16 @@ sub append_path
   $self;
 }
 
+sub prepend_path
+{
+  my($self, $name, @list) = @_;
+
+  push @{ $self->{commands} }, [ 'prepend_path', $name, @list ]
+    if @list > 0;
+
+  $self;
+}
+
 sub comment
 {
   my($self, @comments) = @_;
@@ -149,14 +159,17 @@ sub generate
       }
     }
 
-    elsif($command eq 'append_path')
+    elsif($command eq 'append_path' || $command eq 'prepend_path')
     {
       my($name, @values) = @$args;
       if($shell->is_c)
       {
         my $value = join ':', map { _value_escape_csh($_) } @values;
         $buffer .= "if ( \$?$name ) then\n";
-        $buffer .= "  setenv $name \"\$$name\":'$value'\n";
+        if($command eq 'prepend_path')
+        { $buffer .= "  setenv $name '$value':\"\$$name\"\n" }
+        else
+        { $buffer .= "  setenv $name \"\$$name\":'$value'\n" }
         $buffer .= "else\n";
         $buffer .= "  setenv $name '$value'\n";
         $buffer .= "endif\n";
@@ -165,7 +178,10 @@ sub generate
       {
         my $value = join ':', map { _value_escape_sh($_) } @values;
         $buffer .= "if [ -n \"\$$name\" ] ; then\n";
-        $buffer .= "  export $name=\$$name:'$value'\n";
+        if($command eq 'prepend_path')
+        { $buffer .= "  export $name='$value':\$$name\n" }
+        else
+        { $buffer .= "  export $name=\$$name:'$value'\n" }
         $buffer .= "else\n";
         $buffer .= "  export $name='$value'\n";
         $buffer .= "fi\n";
