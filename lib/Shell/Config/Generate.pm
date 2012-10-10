@@ -189,7 +189,12 @@ sub generate
       elsif($shell->is_cmd || $shell->is_command)
       {
         my $value = join ';', map { _value_escape_win32($_) } @values;
-        $buffer .= "if defined $name (set $name=%$name%;$value) else (set $name=$value)\n";
+        $buffer .= "if defined $name (set ";
+        if($command eq 'prepend_path')
+        { $buffer .= "$name=$value;%$name%" }
+        else
+        { $buffer .= "$name=%$name%;$value" }
+        $buffer .=") else (set $name=$value)\n";
       }
       else
       {
