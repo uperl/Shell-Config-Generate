@@ -51,7 +51,7 @@ sub generate
 
   my $buffer = '';
 
-  foreach my $args (@{ $self->{commands} })
+  foreach my $args (map { [@$_] } @{ $self->{commands} })
   {
     my $command = shift @$args;
 
