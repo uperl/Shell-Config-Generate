@@ -170,6 +170,11 @@ sub generate
         $buffer .= "  export $name='$value'\n";
         $buffer .= "fi\n";
       }
+      elsif($shell->is_cmd || $shell->is_command)
+      {
+        my $value = join ';', map { _value_escape_win32($_) } @values;
+        $buffer .= "if defined $name (set $name=%$name%;$value) else (set $name=$value)\n";
+      }
       else
       {
         die 'don\'t know how to "append_path" with ' . $shell->name;
