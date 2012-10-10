@@ -76,7 +76,7 @@ sub main::get_env
   
   chmod 0700, $fn;
 
-  diag `cat $fn`;  
+  #diag `cat $fn`;  
   my $VAR1;
   eval `$fn`;
   
