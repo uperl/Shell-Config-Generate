@@ -16,7 +16,7 @@ sub set
 {
   my($self, $name, $value) = @_;
 
-  push $self->{commands}, ['set', $name, $value];
+  push @{ $self->{commands} }, ['set', $name, $value];
 
   $self;
 }
@@ -25,7 +25,17 @@ sub set_path
 {
   my($self, $name, @list) = @_;
 
-  push $self->{commands}, [ 'set_path', $name, @list ];
+  push @{ $self->{commands} }, [ 'set_path', $name, @list ];
+
+  $self;
+}
+
+sub append_path
+{
+  my($self, $name, @list) = @_;
+
+  push @{ $self->{commands} }, [ 'append_path', $name, @list ]
+    if @list > 0;
 
   $self;
 }
@@ -34,7 +44,7 @@ sub comment
 {
   my($self, @comments) = @_;
 
-  push $self->{commands}, ['comment', $_] for @comments;
+  push @{ $self->{commands} }, ['comment', $_] for @comments;
 
   $self;
 }
@@ -136,6 +146,33 @@ sub generate
       else
       {
         die 'don\'t know how to "set" with ' . $shell->name;
+      }
+    }
+
+    elsif($command eq 'append_path')
+    {
+      my($name, @values) = @$args;
+      if($shell->is_c)
+      {
+        my $value = join ':', map { _value_escape_csh($_) } @values;
+        $buffer .= "if ( \$?$name ) then\n";
+        $buffer .= "  setenv $name \"\$$name\":'$value'\n";
+        $buffer .= "else\n";
+        $buffer .= "  setenv $name '$value'\n";
+        $buffer .= "endif\n";
+      }
+      elsif($shell->is_bourne)
+      {
+        my $value = join ':', map { _value_escape_sh($_) } @values;
+        $buffer .= "if [ -n \"\$$name\" ] ; then\n";
+        $buffer .= "  export $name=\$$name:'$value'\n";
+        $buffer .= "else\n";
+        $buffer .= "  export $name='$value'\n";
+        $buffer .= "fi\n";
+      }
+      else
+      {
+        die 'don\'t know how to "append_path" with ' . $shell->name;
       }
     }
 
