@@ -9,7 +9,7 @@ use warnings;
 sub new
 {
   my($class) = @_;
-  bless { commands => [], echooff => 0 }, $class;
+  bless { commands => [], echo_off => 0 }, $class;
 }
 
 sub set
@@ -66,17 +66,17 @@ sub shebang
   $self;
 }
 
-sub echooff
+sub echo_off
 {
   my($self) = @_;
-  $self->{echooff} = 1;
+  $self->{echo_off} = 1;
   $self;
 }
 
-sub echoon
+sub echo_on
 {
   my($self) = @_;
-  $self->{echooff} = 0;
+  $self->{echo_off} = 0;
   $self;
 }
 
@@ -118,7 +118,7 @@ sub generate
     { $buffer .= "#!" . $shell->default_location . "\n" }
   }
 
-  if($self->{echooff} && ($shell->is_cmd || $shell->is_command))
+  if($self->{echo_off} && ($shell->is_cmd || $shell->is_command))
   {
     $buffer .= '@echo off' . "\n";
   }
