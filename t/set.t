@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use constant tests_per_shell => 6;
+use constant tests_per_shell => 8;
 use constant number_of_shells => 5;
 use Test::More tests => (tests_per_shell * number_of_shells) + 1;
 use Shell::Config::Generate;
@@ -9,7 +9,7 @@ use Test::Differences;
 
 require "$FindBin::Bin/common.pl";
 
-my $dir = tempdir();
+tempdir();
 
 foreach my $shell (qw( tcsh csh bash sh zsh ))
 {
@@ -23,19 +23,23 @@ foreach my $shell (qw( tcsh csh bash sh zsh ))
 
     my $ret = eval { $config->set( FOO_SIMPLE_SET => 'bar' ) };
     diag $@ if $@;
-    
+
     $config->set( FOO_ESCAPE1 => '!@#$%^&*()_+-={}|[]\\;:<>?,./~`' );
     $config->set( FOO_ESCAPE2 => "'" );
     $config->set( FOO_ESCAPE3 => '"' );
+    $config->set( FOO_NEWLINE => "\n" );
+    $config->set( FOO_TAB     => "\t" );
   
     isa_ok $ret, 'Shell::Config::Generate';
 
     my $env = get_env($config, $shell, $shell_path);
 
     is $env->{FOO_SIMPLE_SET}, 'bar',                             'FOO_SIMPLE_SET = bar';
-    is $env->{FOO_ESCAPE1},    '!@#$%^&*()_+-={}|[]\\;:<>?,./~`', 'FOO_ESCAPE1 = !@#$%^&*()_+-={}|[]\\;:<>?,./~`';
-    is $env->{FOO_ESCAPE2},    "'",                               'FOO_ESCAPE2 = \'';
-    is $env->{FOO_ESCAPE3},    '"',                               'FOO_ESCAPE3 = "';
+    is $env->{FOO_ESCAPE1},    '!@#$%^&*()_+-={}|[]\\;:<>?,./~`', 'FOO_ESCAPE1    = !@#$%^&*()_+-={}|[]\\;:<>?,./~`';
+    is $env->{FOO_ESCAPE2},    "'",                               'FOO_ESCAPE2    = \'';
+    is $env->{FOO_ESCAPE3},    '"',                               'FOO_ESCAPE3    = "';
+    is $env->{FOO_NEWLINE},    "\n",                              'FOO_NEWLINE    = \n';
+    is $env->{FOO_TAB},        "\t",                              'FOO_TAB        = \t';
   }
 }
 

@@ -21,10 +21,19 @@ sub set
   $self;
 }
 
+sub comment
+{
+  my($self, @comments) = @_;
+
+  push $self->{commands}, ['comment', $_] for @comments;
+
+  $self;
+}
+
 sub _value_escape_csh
 {
   my $value = shift . '';
-  $value =~ s/([!])/\\$1/g;
+  $value =~ s/([\n!])/\\$1/g;
   $value =~ s/(')/'"$1"'/g;
   $value;
 }
@@ -63,6 +72,19 @@ sub generate
       {
         # FIXME
         die 'don\'t know how to "set" with ' . $shell->name;
+      }
+    }
+
+    elsif($command eq 'comment')
+    {
+      if($shell->is_unix)
+      {
+        $buffer .= "# $_\n" for map { split /\n/, } @$args;
+      }
+      else
+      {
+        # FIXME
+        die 'don\'t know how to "comment" with ' . $shell->name;
       }
     }
   }
