@@ -66,6 +66,48 @@ will generate a config.cmd (Windows cmd.exe script) with this:
  set PERL5LIB=/foo/bar/lib/perl5;/foo/bar/lib/perl5/perl5/site
  if defined PATH (set PATH=%PATH%;/foo/bar/bin;/bar/foo/bin) else (set PATH=/foo/bar/bin;/bar/foo/bin)
 
+=head1 DESCRIPTION
+
+This module provides an interface for specifying shell configurations
+for different shell environments without having to worry about the 
+arcane differences between shells such as csh and sh.
+
+This module uses L<Shell::Guess> to represent the different types
+of shells that are supported.  In this way you can statically specify
+just one or more shells:
+
+ #!/usr/bin/perl
+ use Shell::Guess;
+ use Shell::Config::Generate;
+ my $config = Shell::Config::Generate->new;
+ # ... config config ...
+ $config->generate_file(Shell::Guess->bourne_shell, 'foo.sh');
+ $config->generate_file(Shell::Guess->c_shell, 'foo.csh');
+
+or you can use the shell that is being used by the user:
+
+ #!/usr/bin/perl
+ use Shell::Guess;
+ use Shell::Config::Generate;
+ use Shell::Config::Generate->new;
+ # ... config config ...
+ print $config->generate(Shell::Guess->running_shell);
+
+In the latter example you can eval the output of your script using 
+back ticks to import the configuration into the shell.
+
+ #!/bin/sh
+ # works in sh
+ eval `script.pl`
+
+ #!/bin/csh
+ # also works in csh
+ eval `script.pl`
+
+=head2 Shell::Config::Generate->new
+
+creates an instance of She::Config::Generate.
+
 =cut
 
 sub new
@@ -73,6 +115,29 @@ sub new
   my($class) = @_;
   bless { commands => [], echo_off => 0 }, $class;
 }
+
+=head2 METHODS
+
+There are two types of instance methods for this class:
+
+=over 4
+
+=item * modifiers
+
+adjust the configuration in an internal portable format
+
+=item * generators
+
+generate shell configuration in a specific format given
+the internal portable format stored inside the instance.
+
+=back
+
+=head2 $config-E<gt>set( $name => $value )
+
+Set an environment variable.
+
+=cut
 
 sub set
 {
@@ -83,6 +148,18 @@ sub set
   $self;
 }
 
+=head2 $config-E<gt>set_path( $name => @values )
+
+Sets an environment variable which is stored in standard
+'path' format (Like PATH or PERL5LIB).  In UNIX land this 
+is a colen separated list stored as a string.  In Windows 
+this is a semicolen separated list stored as a string.
+
+This will replace the existing path value if it already
+exists.
+
+=cut
+
 sub set_path
 {
   my($self, $name, @list) = @_;
@@ -91,6 +168,14 @@ sub set_path
 
   $self;
 }
+
+=head2 $config-E<gt>append_path( $name => @values );
+
+Appends to an environment variable which is stored in standard
+'path' format.  This will create a new environment variable if
+it doesn't already exist, or add to an existing value.
+
+=cut
 
 sub append_path
 {
@@ -102,6 +187,14 @@ sub append_path
   $self;
 }
 
+=head2 $config-E<gt>prepend_path( $name => @values );
+
+Prepend to an environment variable which is stored in standard
+'path' format.  This will create a new environment variable if
+it doesn't already exist, or add to an existing value.
+
+=cut
+
 sub prepend_path
 {
   my($self, $name, @list) = @_;
@@ -112,6 +205,12 @@ sub prepend_path
   $self;
 }
 
+=head2 $config-E<gt>comment( $comment )
+
+This will generate a comment in the appropriat format.
+
+=cut
+
 sub comment
 {
   my($self, @comments) = @_;
@@ -121,6 +220,16 @@ sub comment
   $self;
 }
 
+=head2 $config-E<gt>shebang( [ $location ] )
+
+This will generate a shebang at the beginning of the configuration,
+making it appropriate for use as a script.  For non UNIX shells this
+will be ignored.  If specified, $location will be used as the 
+interpreter location.  If it is not specified, then the default
+location for the shell will be used.
+
+=cut
+
 sub shebang
 {
   my($self, $location) = @_;
@@ -128,12 +237,28 @@ sub shebang
   $self;
 }
 
+=head2 $config-E<gt>echo_off
+
+For DOS/Windows configs (command.com or cmd.exe), issue this as the
+first line of the config:
+
+ @echo off
+
+=cut
+
 sub echo_off
 {
   my($self) = @_;
   $self->{echo_off} = 1;
   $self;
 }
+
+=head2 $config-E<gt>echo_on
+
+Turn off the echo off (that is do not put anything at the beginning of
+the config) for DOS/Windows configs (command.com or cmd.exe).
+
+=cut
 
 sub echo_on
 {
@@ -165,6 +290,13 @@ sub _value_escape_win32
   $value =~ s/\n/^\n\n/g;
   $value;
 }
+
+=head2 $config-E<gt>generate( $shell )
+
+Generate shell configuration code for the given shell.
+$shell is an instance of L<Shell::Guess>.
+
+=cut
 
 sub generate
 {
@@ -283,6 +415,15 @@ sub generate
 
   $buffer;
 }
+
+=head2 $config-E<gt>generate_file( $shell, $filename )
+
+Generate shell configuration code for the given shell
+and write it to the given filename.  $shell is an instance 
+of L<Shell::Guess>.  If there is an IO error it will throw
+an exception.
+
+=cut
 
 sub generate_file
 {
