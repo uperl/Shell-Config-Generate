@@ -87,7 +87,7 @@ sub main::get_env
 
   #diag `cat $fn`;  
   my $VAR1;
-  my $output = `$fn`;
+  my $output = $shell->is_unix ? `$shell_path $fn` : `$fn`;
   #diag $output;
   eval $output;
   
