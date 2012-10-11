@@ -116,7 +116,7 @@ sub new
   bless { commands => [], echo_off => 0 }, $class;
 }
 
-=head2 METHODS
+=head1 METHODS
 
 There are two types of instance methods for this class:
 

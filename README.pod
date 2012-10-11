@@ -108,7 +108,7 @@ back ticks to import the configuration into the shell.
 
 creates an instance of She::Config::Generate.
 
-=head2 METHODS
+=head1 METHODS
 
 There are two types of instance methods for this class:
 
