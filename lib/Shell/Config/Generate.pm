@@ -59,7 +59,7 @@ and this:
 
  $config->generate_file(Shell::Guess->cmd_shell, 'config.cmd');
 
-will generate a config.cmd (Windows cmd.exe script) with this:
+will generate a C<config.cmd> (Windows C<cmd.exe> script) with this:
 
  rem this is my config file
  set FOO=bar
@@ -245,7 +245,7 @@ sub shebang
 
 =head2 $config-E<gt>echo_off
 
-For DOS/Windows configurations (command.com or cmd.exe), issue this as the
+For DOS/Windows configurations (C<command.com> or C<cmd.exe>), issue this as the
 first line of the config:
 
  @echo off
@@ -262,7 +262,7 @@ sub echo_off
 =head2 $config-E<gt>echo_on
 
 Turn off the echo off (that is do not put anything at the beginning of
-the config) for DOS/Windows configurations (command.com or cmd.exe).
+the config) for DOS/Windows configurations (C<command.com> or C<cmd.exe>).
 
 =cut
 
@@ -452,7 +452,7 @@ __END__
 The test suite tests this module's output against the actual
 shells that should understand them, if they can be found in
 the path.  You can generate configurations for shells which
-are not available (for example cmd.exe configurations from UNIX or
+are not available (for example C<cmd.exe> configurations from UNIX or
 bourne configurations under windows), but the test suite only tests
 them if they are found during the build of this module.
 
