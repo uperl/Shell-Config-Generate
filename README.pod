@@ -6,6 +6,66 @@ Shell::Config::Generate - Portably generate config for any shell
 
 version 0.1
 
+=head1 SYNOPSIS
+
+With this start up:
+
+ use Shell::Guess;
+ use Shell::Config::Generate;
+ 
+ my $config = Shell::Config::Generate->new;
+ $config->comment( 'this is my config file' );
+ $config->set( FOO => 'bar' );
+ $config->set_path(
+   PERL5LIB => '/foo/bar/lib/perl5',
+               '/foo/bar/lib/perl5/perl5/site',
+ );
+ $config->append_path(
+   PATH => '/foo/bar/bin',
+           '/bar/foo/bin',
+ );
+
+This:
+
+ $config->generate_file(Shell::Guess->bourne_shell, 'config.sh');
+
+will generate a config.sh file with this:
+
+ # this is my config file
+ export FOO='bar'
+ export PERL5LIB='/foo/bar/lib/perl5:/foo/bar/lib/perl5/perl5/site'
+ if [ -n "$PATH" ] ; then
+   export PATH=$PATH:'/foo/bar/bin:/bar/foo/bin'
+ else
+   export PATH='/foo/bar/bin:/bar/foo/bin'
+ fi
+
+and this:
+
+ $config->generate_file(Shell::Guess->c_shell, 'config.csh');
+
+will generate a config.csh with this:
+
+ # this is my config file
+ setenv FOO 'bar'
+ setenv PERL5LIB '/foo/bar/lib/perl5:/foo/bar/lib/perl5/perl5/site'
+ if ( $?PATH ) then
+   setenv PATH "$PATH":'/foo/bar/bin:/bar/foo/bin'
+ else
+   setenv PATH '/foo/bar/bin:/bar/foo/bin'
+ endif
+
+and this:
+
+ $config->generate_file(Shell::Guess->cmd_shell, 'config.cmd');
+
+will generate a config.cmd (Windows cmd.exe script) with this:
+
+ rem this is my config file
+ set FOO=bar
+ set PERL5LIB=/foo/bar/lib/perl5;/foo/bar/lib/perl5/perl5/site
+ if defined PATH (set PATH=%PATH%;/foo/bar/bin;/bar/foo/bin) else (set PATH=/foo/bar/bin;/bar/foo/bin)
+
 =head1 AUTHOR
 
 Graham Ollis <plicease@cpan.org>
