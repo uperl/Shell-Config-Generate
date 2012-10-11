@@ -72,6 +72,9 @@ This module provides an interface for specifying shell configurations
 for different shell environments without having to worry about the 
 arcane differences between shells such as csh and sh.
 
+It does not modify the current environment, but it can be used to
+create shell configurations which will modify the environment.
+
 This module uses L<Shell::Guess> to represent the different types
 of shells that are supported.  In this way you can statically specify
 just one or more shells:
@@ -94,7 +97,7 @@ or you can use the shell that is being used by the user:
  print $config->generate(Shell::Guess->running_shell);
 
 In the latter example you can eval the output of your script using 
-back ticks to import the configuration into the shell.
+your shell's back ticks to import the configuration into the shell.
 
  #!/bin/sh
  # works in sh
