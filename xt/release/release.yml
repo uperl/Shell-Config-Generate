@@ -1,1 +1,5 @@
---- {}
+---
+pod_spelling_system:
+  stopwords:
+    - cmd.exe
+    - config.cmd

@@ -152,8 +152,8 @@ sub set
 
 Sets an environment variable which is stored in standard
 'path' format (Like PATH or PERL5LIB).  In UNIX land this 
-is a colen separated list stored as a string.  In Windows 
-this is a semicolen separated list stored as a string.
+is a colon separated list stored as a string.  In Windows 
+this is a semicolon separated list stored as a string.
 
 This will replace the existing path value if it already
 exists.
@@ -207,7 +207,7 @@ sub prepend_path
 
 =head2 $config-E<gt>comment( $comment )
 
-This will generate a comment in the appropriat format.
+This will generate a comment in the appropriate format.
 
 =cut
 
@@ -239,7 +239,7 @@ sub shebang
 
 =head2 $config-E<gt>echo_off
 
-For DOS/Windows configs (command.com or cmd.exe), issue this as the
+For DOS/Windows configurations (command.com or cmd.exe), issue this as the
 first line of the config:
 
  @echo off
@@ -256,7 +256,7 @@ sub echo_off
 =head2 $config-E<gt>echo_on
 
 Turn off the echo off (that is do not put anything at the beginning of
-the config) for DOS/Windows configs (command.com or cmd.exe).
+the config) for DOS/Windows configurations (command.com or cmd.exe).
 
 =cut
 
@@ -419,7 +419,7 @@ sub generate
 =head2 $config-E<gt>generate_file( $shell, $filename )
 
 Generate shell configuration code for the given shell
-and write it to the given filename.  $shell is an instance 
+and write it to the given file.  $shell is an instance 
 of L<Shell::Guess>.  If there is an IO error it will throw
 an exception.
 
