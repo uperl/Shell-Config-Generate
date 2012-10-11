@@ -133,6 +133,11 @@ the internal portable format stored inside the instance.
 
 =back
 
+The idea is that you can create multiple modifications
+to the environment without worrying about specific shells, 
+then when you are done you can create shell specific 
+versions of those modifications using the generators.
+
 =head2 $config-E<gt>set( $name => $value )
 
 Set an environment variable.
