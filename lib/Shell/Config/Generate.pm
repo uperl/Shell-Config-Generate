@@ -440,3 +440,20 @@ sub generate_file
 # TODO alias
 
 1;
+
+__END__
+
+=head1 CAVEATS
+
+The test suite tests this modules output against the actual
+shells that should understand them, if they can be found in
+the path.  You can generate configurations for shells which
+are not available (for example cmd.exe configurations from UNIX or
+bourne configurations under windows), but the test suite only tests
+them if they are found during the build of this module.
+
+There are probably more clever or prettier ways to 
+append/prepend path environment variables as I am not a shell
+programmer.
+
+=cut
