@@ -445,7 +445,7 @@ __END__
 
 =head1 CAVEATS
 
-The test suite tests this modules output against the actual
+The test suite tests this module's output against the actual
 shells that should understand them, if they can be found in
 the path.  You can generate configurations for shells which
 are not available (for example cmd.exe configurations from UNIX or
@@ -454,6 +454,8 @@ them if they are found during the build of this module.
 
 There are probably more clever or prettier ways to 
 append/prepend path environment variables as I am not a shell
-programmer.
+programmer.  Patches welcome.
+
+Only UNIX and Windows are supported so far.  Patches welcome.
 
 =cut
