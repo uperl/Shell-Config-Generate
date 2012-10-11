@@ -89,12 +89,15 @@ just one or more shells:
  $config->generate_file(Shell::Guess->bourne_shell, 'foo.sh');
  $config->generate_file(Shell::Guess->c_shell, 'foo.csh');
 
-or you can use the shell that is being used by the user:
+This will create foo.sh and foo.csh versions of the configurations,
+each in the appropriate format.
+
+Alternatively you can use the shell that is being used by the user:
 
  #!/usr/bin/perl
  use Shell::Guess;
  use Shell::Config::Generate;
- use Shell::Config::Generate->new;
+ my $config = Shell::Config::Generate->new;
  # ... config config ...
  print $config->generate(Shell::Guess->running_shell);
 
