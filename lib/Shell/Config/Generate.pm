@@ -32,13 +32,13 @@ This:
 will generate a config.sh file with this:
 
  # this is my config file
- export FOO='bar'
- export PERL5LIB='/foo/bar/lib/perl5:/foo/bar/lib/perl5/perl5/site'
+ export FOO='bar';
+ export PERL5LIB='/foo/bar/lib/perl5:/foo/bar/lib/perl5/perl5/site';
  if [ -n "$PATH" ] ; then
-   export PATH=$PATH:'/foo/bar/bin:/bar/foo/bin'
+   export PATH=$PATH:'/foo/bar/bin:/bar/foo/bin';
  else
-   export PATH='/foo/bar/bin:/bar/foo/bin'
- fi
+   export PATH='/foo/bar/bin:/bar/foo/bin';
+ fi;
 
 and this:
 
@@ -47,13 +47,13 @@ and this:
 will generate a config.csh with this:
 
  # this is my config file
- setenv FOO 'bar'
- setenv PERL5LIB '/foo/bar/lib/perl5:/foo/bar/lib/perl5/perl5/site'
- if ( $?PATH ) then
-   setenv PATH "$PATH":'/foo/bar/bin:/bar/foo/bin'
+ setenv FOO 'bar';
+ setenv PERL5LIB '/foo/bar/lib/perl5:/foo/bar/lib/perl5/perl5/site';
+ if ( $?PATH ) then;
+   setenv PATH "$PATH":'/foo/bar/bin:/bar/foo/bin';
  else
-   setenv PATH '/foo/bar/bin:/bar/foo/bin'
- endif
+   setenv PATH '/foo/bar/bin:/bar/foo/bin';
+ endif ;
 
 and this:
 
