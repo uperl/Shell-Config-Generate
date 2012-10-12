@@ -370,14 +370,14 @@ sub generate
       if($shell->is_c)
       {
         my $value = join ':', map { _value_escape_csh($_) } @values;
-        $buffer .= "if ( \$?$name ) then\n";
+        $buffer .= "if ( \$?$name ) then;\n";
         if($command eq 'prepend_path')
         { $buffer .= "  setenv $name '$value':\"\$$name\";\n" }
         else
         { $buffer .= "  setenv $name \"\$$name\":'$value';\n" }
         $buffer .= "else\n";
         $buffer .= "  setenv $name '$value';\n";
-        $buffer .= "endif\n";
+        $buffer .= "endif ;\n";
       }
       elsif($shell->is_bourne)
       {
