@@ -389,7 +389,7 @@ sub generate
         { $buffer .= "  export $name=\$$name:'$value';\n" }
         $buffer .= "else\n";
         $buffer .= "  export $name='$value';\n";
-        $buffer .= "fi\n";
+        $buffer .= "fi;\n";
       }
       elsif($shell->is_cmd || $shell->is_command)
       {
