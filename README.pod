@@ -71,7 +71,7 @@ for different shell environments without having to worry about the
 arcane differences between shells such as csh, sh, cmd.exe and command.com.
 
 It does not modify the current environment, but it can be used to
-create shell configurations which will modify the environment.
+create shell configurations which do modify the environment.
 
 This module uses L<Shell::Guess> to represent the different types
 of shells that are supported.  In this way you can statically specify
@@ -156,6 +156,10 @@ to the environment without worrying about specific shells,
 then when you are done you can create shell specific 
 versions of those modifications using the generators.
 
+This may be useful for system adminstrators that must support
+users that use different shells, with a single configuration
+generation script written in Perl.
+
 =head2 $config-E<gt>set( $name => $value )
 
 Set an environment variable.
@@ -166,6 +170,8 @@ Sets an environment variable which is stored in standard
 'path' format (Like PATH or PERL5LIB).  In UNIX land this 
 is a colon separated list stored as a string.  In Windows 
 this is a semicolon separated list stored as a string.
+You can do the same thing using the C<set> method, but if
+you do so you have to determine the correct separator.
 
 This will replace the existing path value if it already
 exists.
