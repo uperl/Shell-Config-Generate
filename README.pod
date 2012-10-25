@@ -68,7 +68,7 @@ will generate a C<config.cmd> (Windows C<cmd.exe> script) with this:
 
 This module provides an interface for specifying shell configurations
 for different shell environments without having to worry about the 
-arcane differences between shells such as csh and sh.
+arcane differences between shells such as csh, sh, cmd.exe and command.com.
 
 It does not modify the current environment, but it can be used to
 create shell configurations which will modify the environment.
@@ -82,8 +82,10 @@ just one or more shells:
  use Shell::Config::Generate;
  my $config = Shell::Config::Generate->new;
  # ... config config ...
- $config->generate_file(Shell::Guess->bourne_shell, 'foo.sh');
- $config->generate_file(Shell::Guess->c_shell, 'foo.csh');
+ $config->generate_file(Shell::Guess->bourne_shell,  'foo.sh' );
+ $config->generate_file(Shell::Guess->c_shell,       'foo.csh');
+ $config->generate_file(Shell::Guess->cmd_shell,     'foo.cmd');
+ $config->generate_file(Shell::Guess->command_shell, 'foo.bat');
 
 This will create foo.sh and foo.csh versions of the configurations,
 which can be sourced like so:
@@ -96,7 +98,19 @@ or
  #!/bin/csh
  source foo.csh
 
-Alternatively you can use the shell that is being used by the user:
+It also creates C<.cmd> and C<.bat> files with the same configuration
+which can be used in Windows.  The configuration can be imported back
+into your shell by simply executing these files:
+
+ C:\> foo.cmd
+
+or
+
+ C:\> foo.bat
+
+Alternatively you can use the shell that called your Perl script using
+L<Shell::Guess>'s C<running_shell> method, and write the output to
+standard out.
 
  #!/usr/bin/perl
  use Shell::Guess;
@@ -105,7 +119,7 @@ Alternatively you can use the shell that is being used by the user:
  # ... config config ...
  print $config->generate(Shell::Guess->running_shell);
 
-In the latter example you can eval the output of your script using 
+If you use this pattern, you can eval the output of your script using
 your shell's back ticks to import the configuration into the shell.
 
  #!/bin/sh
@@ -172,6 +186,10 @@ it doesn't already exist, or add to an existing value.
 
 This will generate a comment in the appropriate format.
 
+B<note> that including comments in your configuration may mean
+it will not work with the C<eval> backticks method for importing
+configurations into your shell.
+
 =head2 $config-E<gt>shebang( [ $location ] )
 
 This will generate a shebang at the beginning of the configuration,
@@ -179,6 +197,10 @@ making it appropriate for use as a script.  For non UNIX shells this
 will be ignored.  If specified, $location will be used as the 
 interpreter location.  If it is not specified, then the default
 location for the shell will be used.
+
+B<note> that the shebang in your configuration may mean
+it will not work with the C<eval> backticks method for importing
+configurations into your shell.
 
 =head2 $config-E<gt>echo_off
 
