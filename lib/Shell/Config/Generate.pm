@@ -85,7 +85,15 @@ just one or more shells:
  $config->generate_file(Shell::Guess->c_shell, 'foo.csh');
 
 This will create foo.sh and foo.csh versions of the configurations,
-each in the appropriate format.
+which can be sourced like so:
+
+ #!/bin/sh
+ source foo.sh
+
+or
+
+ #!/bin/csh
+ source foo.csh
 
 Alternatively you can use the shell that is being used by the user:
 
@@ -100,11 +108,11 @@ In the latter example you can eval the output of your script using
 your shell's back ticks to import the configuration into the shell.
 
  #!/bin/sh
- # works in sh
  eval `script.pl`
 
+or
+
  #!/bin/csh
- # also works in csh
  eval `script.pl`
 
 =head2 Shell::Config::Generate->new
