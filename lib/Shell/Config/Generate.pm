@@ -2,6 +2,7 @@ package Shell::Config::Generate;
 
 use strict;
 use warnings;
+use Shell::Guess;
 
 # ABSTRACT: Portably generate config for any shell
 # VERSION
@@ -49,11 +50,7 @@ will generate a config.csh with this:
  # this is my config file
  setenv FOO 'bar';
  setenv PERL5LIB '/foo/bar/lib/perl5:/foo/bar/lib/perl5/perl5/site';
- if ( $?PATH ) then;
-   setenv PATH "$PATH":'/foo/bar/bin:/bar/foo/bin';
- else
-   setenv PATH '/foo/bar/bin:/bar/foo/bin';
- endif ;
+ [ $?PATH == 0 ] && setenv PATH '/foo/bar/bin:/bar/foo/bin' || setenv PATH "$PATH":'/foo/bar/bin:/bar/foo/bin';
 
 and this:
 
@@ -302,10 +299,12 @@ sub _value_escape_win32
   $value;
 }
 
-=head2 $config-E<gt>generate( $shell )
+=head2 $config-E<gt>generate( [ $shell ] )
 
 Generate shell configuration code for the given shell.
-$shell is an instance of L<Shell::Guess>.
+$shell is an instance of L<Shell::Guess>.  If $shell
+is not provided, then this method will use Shell::Guess
+to guess the shell that called your perl script.
 
 =cut
 
@@ -313,6 +312,8 @@ sub generate
 {
   my($self, $shell) = @_;
 
+  $shell ||= Shell::Guess->running_shell;
+  
   my $buffer = '';
 
   if(exists $self->{shebang} && $shell->is_unix)
@@ -370,14 +371,12 @@ sub generate
       if($shell->is_c)
       {
         my $value = join ':', map { _value_escape_csh($_) } @values;
-        $buffer .= "if ( \$?$name ) then;\n";
+        $buffer .= "[ \$?$name == 0 ] && setenv $name '$value' || ";
         if($command eq 'prepend_path')
-        { $buffer .= "  setenv $name '$value':\"\$$name\";\n" }
+        { $buffer .= "setenv $name '$value':\"\$$name\"" }
         else
-        { $buffer .= "  setenv $name \"\$$name\":'$value';\n" }
-        $buffer .= "else\n";
-        $buffer .= "  setenv $name '$value';\n";
-        $buffer .= "endif ;\n";
+        { $buffer .= "setenv $name \"\$$name\":'$value'" }
+        $buffer .= ";\n";
       }
       elsif($shell->is_bourne)
       {
