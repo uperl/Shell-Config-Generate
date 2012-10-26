@@ -50,7 +50,7 @@ will generate a config.csh with this:
  # this is my config file
  setenv FOO 'bar';
  setenv PERL5LIB '/foo/bar/lib/perl5:/foo/bar/lib/perl5/perl5/site';
- [ $?PATH == 0 ] && setenv PATH '/foo/bar/bin:/bar/foo/bin' || setenv PATH "$PATH":'/foo/bar/bin:/bar/foo/bin';
+ [ $?PATH = 0 ] && setenv PATH '/foo/bar/bin:/bar/foo/bin' || setenv PATH "$PATH":'/foo/bar/bin:/bar/foo/bin';
 
 and this:
 
@@ -163,7 +163,7 @@ to the environment without worrying about specific shells,
 then when you are done you can create shell specific 
 versions of those modifications using the generators.
 
-This may be useful for system adminstrators that must support
+This may be useful for system administrators that must support
 users that use different shells, with a single configuration
 generation script written in Perl.
 
@@ -407,7 +407,7 @@ sub generate
       if($shell->is_c)
       {
         my $value = join ':', map { _value_escape_csh($_) } @values;
-        $buffer .= "[ \$?$name == 0 ] && setenv $name '$value' || ";
+        $buffer .= "[ \$?$name = 0 ] && setenv $name '$value' || ";
         if($command eq 'prepend_path')
         { $buffer .= "setenv $name '$value':\"\$$name\"" }
         else

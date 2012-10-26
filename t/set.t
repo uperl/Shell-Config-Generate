@@ -32,12 +32,12 @@ foreach my $shell (qw( tcsh csh bash sh zsh cmd.exe command.com ))
 
     my $env = get_env($config, $shell, $shell_path);
 
-    is $env->{FOO_SIMPLE_SET}, 'bar',                             'FOO_SIMPLE_SET = bar';
-    is $env->{FOO_ESCAPE1},    '!@#$%^&*()_+-={}|[]\\;:<>?,./~`', 'FOO_ESCAPE1    = !@#$%^&*()_+-={}|[]\\;:<>?,./~`';
-    is $env->{FOO_ESCAPE2},    "'",                               'FOO_ESCAPE2    = \'';
-    is $env->{FOO_ESCAPE3},    '"',                               'FOO_ESCAPE3    = "';
-    is $env->{FOO_TAB},        "\t",                              'FOO_TAB        = \t';
-    is $env->{FOO_NEWLINE},    "\n",                              'FOO_NEWLINE    = \n';
+    is $env->{FOO_SIMPLE_SET}, 'bar',                             "[$shell]".'FOO_SIMPLE_SET = bar';
+    is $env->{FOO_ESCAPE1},    '!@#$%^&*()_+-={}|[]\\;:<>?,./~`', "[$shell]".'FOO_ESCAPE1    = !@#$%^&*()_+-={}|[]\\;:<>?,./~`';
+    is $env->{FOO_ESCAPE2},    "'",                               "[$shell]".'FOO_ESCAPE2    = \'';
+    is $env->{FOO_ESCAPE3},    '"',                               "[$shell]".'FOO_ESCAPE3    = "';
+    is $env->{FOO_TAB},        "\t",                              "[$shell]".'FOO_TAB        = \t';
+    is $env->{FOO_NEWLINE},    "\n",                              "[$shell]".'FOO_NEWLINE    = \n';
     
   }
 }

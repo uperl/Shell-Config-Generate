@@ -33,7 +33,7 @@ foreach my $shell (qw( tcsh csh bash sh zsh command.com cmd.exe ))
 
     my $env = get_env($config, $shell, $shell_path);
 
-    is $env->{FOO_SIMPLE_SET}, 'bar', "FOO_SIMPLE_SET = bar ($shell)";
+    is $env->{FOO_SIMPLE_SET}, 'bar', "[$shell] FOO_SIMPLE_SET = bar";
   }
 }
 

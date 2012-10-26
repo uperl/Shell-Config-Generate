@@ -33,8 +33,8 @@ foreach my $shell (qw( tcsh csh bash sh zsh cmd.exe command.com ))
 
     my $env = get_env($config, $shell, $shell_path);
 
-    eq_or_diff [split /;|:/, $env->{FOO_PATH1}], [qw( foo bar baz )], "FOO_PATH1 = foo bar baz";
-    eq_or_diff [split /;|:/, $env->{FOO_PATH2}], [qw( foo bar baz )], "FOO_PATH2 = foo bar baz";
+    eq_or_diff [split /;|:/, $env->{FOO_PATH1}], [qw( foo bar baz )], "[$shell] FOO_PATH1 = foo bar baz";
+    eq_or_diff [split /;|:/, $env->{FOO_PATH2}], [qw( foo bar baz )], "[$shell] FOO_PATH2 = foo bar baz";
   }
 }
 
