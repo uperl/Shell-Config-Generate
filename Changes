@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.02      2012-10-26 07:53:58 EST5EDT
   - use [ $?X = instead of [ $?X == because GNU [ works differently
 
 0.01      2012-10-25 15:30:44 America/New_York
