@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - fix doco to remove bashism when referring to bourne shell.
 
 0.02      2012-10-26 07:53:58 EST5EDT
   - use [ $?X = instead of [ $?X == because GNU [ works differently

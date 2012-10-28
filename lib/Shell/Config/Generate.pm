@@ -90,7 +90,7 @@ This will create foo.sh and foo.csh versions of the configurations,
 which can be sourced like so:
 
  #!/bin/sh
- source foo.sh
+ . ./foo.sh
 
 or
 
