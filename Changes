@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.03      2012-10-28 07:44:41 EST5EDT
   - fix doco to remove bashism when referring to bourne shell.
 
 0.02      2012-10-26 07:53:58 EST5EDT
