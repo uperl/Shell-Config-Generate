@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 use constant tests_per_shell => 6;
-use constant number_of_shells => 7;
+use constant number_of_shells => 8;
 use Test::More tests => (tests_per_shell * number_of_shells) + 3;
 use Shell::Config::Generate;
 use FindBin ();
@@ -24,7 +24,7 @@ $config->set( FOO_ESCAPE3 => '"' );
 $config->set( FOO_NEWLINE => "\n" );
 $config->set( FOO_TAB     => "\t" );
 
-foreach my $shell (qw( tcsh csh bash sh zsh cmd.exe command.com ))
+foreach my $shell (qw( tcsh csh bash sh zsh cmd.exe command.com ksh ))
 {
   my $shell_path = find_shell($shell);
   SKIP: {

@@ -54,6 +54,7 @@ my %shell = (
   zsh           => 'z_shell',
   'command.com' => 'command_shell',
   'cmd.exe'     => 'cmd_shell',
+  ksh           => 'korn_shell',
 );
 
 sub get_guess
