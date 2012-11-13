@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 use constant tests_per_shell => 1;
-use constant number_of_shells => 8;
+use constant number_of_shells => 9;
 use Test::More tests => (tests_per_shell * number_of_shells) + 3;
 use Shell::Config::Generate;
 use FindBin ();
@@ -19,7 +19,7 @@ my $ret = eval { $config->set_path( FOO_PATH1 => qw( foo bar baz ) ) };
 diag $@ if $@;
 isa_ok $ret, 'Shell::Config::Generate';
 
-foreach my $shell (qw( tcsh csh bash sh zsh cmd.exe command.com ksh ))
+foreach my $shell (qw( tcsh csh bash sh zsh cmd.exe command.com ksh 44bsd-csh ))
 {
   my $shell_path = find_shell($shell);
   SKIP: {

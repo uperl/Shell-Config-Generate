@@ -55,6 +55,7 @@ my %shell = (
   'command.com' => 'command_shell',
   'cmd.exe'     => 'cmd_shell',
   ksh           => 'korn_shell',
+  '44bsd-csh'   => 'c_shell',
 );
 
 sub get_guess

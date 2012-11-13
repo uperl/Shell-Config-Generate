@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 use constant tests_per_shell => 2;
-use constant number_of_shells => 8;
+use constant number_of_shells => 9;
 use Test::More tests => (tests_per_shell * number_of_shells) + 3;
 use Shell::Config::Generate;
 use FindBin ();
@@ -25,7 +25,7 @@ delete $ENV{FOO_PATH2};
 
 $config->append_path( FOO_PATH2 => qw( foo bar baz ) );
 
-foreach my $shell (qw( tcsh csh bash sh zsh cmd.exe command.com ksh ))
+foreach my $shell (qw( tcsh csh bash sh zsh cmd.exe command.com ksh 44bsd-csh ))
 {
   my $shell_path = find_shell($shell);
   SKIP: {
