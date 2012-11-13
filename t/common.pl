@@ -87,10 +87,31 @@ sub main::get_env
   
   chmod 0700, $fn;
 
-  #diag `cat $fn`;  
   my $VAR1;
   my $output = $shell->is_unix ? `$shell_path $fn` : `$fn`;
-  #diag $output;
+
+  my $fail = 0;  
+  if ($? == -1)
+  {
+    diag "failed to execute: $!\n";
+    $fail = 1;
+  }
+  elsif ($? & 127) {
+    diag "child died with signal ", $? & 127;
+    $fail = 1;
+  }
+  elsif($? >> 8)
+  {
+    diag "child exited with value ", $? >> 8;
+    $fail = 1;
+  }
+  
+  if($fail)
+  {
+    diag "[src]\n" . `cat $fn`;
+    diag "[out]\n$output";
+  }
+  
   eval $output;
   
   return $VAR1;
