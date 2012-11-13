@@ -313,7 +313,7 @@ sub echo_on
 
 sub _value_escape_csh
 {
-  my $value = shift . '';
+  my $value = shift() . '';
   $value =~ s/([\n!])/\\$1/g;
   $value =~ s/(')/'"$1"'/g;
   $value;
@@ -321,14 +321,14 @@ sub _value_escape_csh
 
 sub _value_escape_sh
 {
-  my $value = shift . '';
+  my $value = shift() . '';
   $value =~ s/(')/'"$1"'/g;
   $value;
 }
 
 sub _value_escape_win32
 {
-  my $value = shift . '';
+  my $value = shift() . '';
   $value =~ s/%/%%/g;
   $value =~ s/([&^|<>])/^$1/g;
   $value =~ s/\n/^\n\n/g;
