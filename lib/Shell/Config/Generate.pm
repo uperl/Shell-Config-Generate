@@ -50,7 +50,7 @@ will generate a config.csh with this:
  # this is my config file
  setenv FOO 'bar';
  setenv PERL5LIB '/foo/bar/lib/perl5:/foo/bar/lib/perl5/perl5/site';
- [ $?PATH = 0 ] && setenv PATH '/foo/bar/bin:/bar/foo/bin' || setenv PATH "$PATH":'/foo/bar/bin:/bar/foo/bin';
+ \[ "$?PATH" = 0 ] && setenv PATH '/foo/bar/bin:/bar/foo/bin' || setenv PATH "$PATH":'/foo/bar/bin:/bar/foo/bin';
 
 and this:
 
@@ -407,7 +407,7 @@ sub generate
       if($shell->is_c)
       {
         my $value = join ':', map { _value_escape_csh($_) } @values;
-        $buffer .= "[ \$?$name = 0 ] && setenv $name '$value' || ";
+        $buffer .= "\\[ \"\$?$name\" = 0 ] && setenv $name '$value' || ";
         if($command eq 'prepend_path')
         { $buffer .= "setenv $name '$value':\"\$$name\"" }
         else

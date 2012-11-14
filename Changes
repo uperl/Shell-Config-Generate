@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - escape [ in append and prepend magic so that csh on Solaris is happy.
 
 0.04      2012-11-13 02:41:59 EST5EDT
   - test against 44bsd-csh, if found in PATH, non "t" csh on FreeBSD
