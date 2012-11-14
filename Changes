@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.05      2012-11-14 12:43:28 America/New_York
   - escape [ in append and prepend magic so that csh on Solaris is happy.
 
 0.04      2012-11-13 02:41:59 EST5EDT
