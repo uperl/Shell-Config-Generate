@@ -262,7 +262,7 @@ make more sense:
    setenv PATH "$PATH":'/foo/bar/bin:/bar/foo/bin'
  endif
 
-However, this only works if the code interptered using the csh
+However, this only works if the code interpreted using the csh
 C<source> command or is included in a csh script inline.  If you 
 try to invoke this code using csh C<eval> then it will helpfully
 convert it to one line and if does not work under csh in one line.
@@ -276,6 +276,10 @@ with Solaris an unescaped [ confuses either the shell or [ itself.
  % csh
  % [ "$?PATH" = 0 ] && setenv PATH '/foo/bar/bin:/bar/foo/bin' || setenv PATH "$PATH":'/foo/bar/bin:/bar/foo/bin';
  Missing ]
+
+44bsd-csh which comes with the FreeBSD ports collection does not 
+have this problem.  The only place I have see it or have been able to
+reproduce it is with the csh that comes with Solaris.
 
 =back
 
