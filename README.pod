@@ -243,6 +243,42 @@ are not available (for example C<cmd.exe> configurations from UNIX or
 bourne configurations under windows), but the test suite only tests
 them if they are found during the build of this module.
 
+The incantation for prepending and appending elements to a path
+on csh probably deserve a comment here.  It looks like this:
+
+ \[ "$?PATH" = 0 ] && setenv PATH '/foo/bar/bin:/bar/foo/bin' || setenv PATH "$PATH":'/foo/bar/bin:/bar/foo/bin';
+
+=over 4
+
+=item * one line
+
+The command is all on one line, and doesn't use if, which is 
+probably more clear and ideomatic.  This for example, might 
+make more sense:
+
+ if ( $?PATH == 0 ) then
+   setenv PATH '/foo/bar/bin:/bar/foo/bin' 
+ else
+   setenv PATH "$PATH":'/foo/bar/bin:/bar/foo/bin'
+ endif
+
+However, this only works if the code interptered using the csh
+C<source> command or is included in a csh script inline.  If you 
+try to invoke this code using csh C<eval> then it will helpfully
+convert it to one line and if does not work under csh in one line.
+
+=item * escaping [
+
+The initial [ is escaped.  This is not necessary in tcsh and newer
+versions of csh.  In older versions of csh, like the one which comes
+with Solaris an unescaped [ confuses either the shell or [ itself.
+
+ % csh
+ % [ "$?PATH" = 0 ] && setenv PATH '/foo/bar/bin:/bar/foo/bin' || setenv PATH "$PATH":'/foo/bar/bin:/bar/foo/bin';
+ Missing ]
+
+=back
+
 There are probably more clever or prettier ways to 
 append/prepend path environment variables as I am not a shell
 programmer.  Patches welcome.
