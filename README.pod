@@ -130,6 +130,8 @@ or
  #!/bin/csh
  eval `script.pl`
 
+=head1 CONSTRUCTOR
+
 =head2 Shell::Config::Generate->new
 
 creates an instance of She::Config::Generate.
