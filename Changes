@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - fix for settting environment variables in traditional bourne shell
 
 0.05      2012-11-14 12:43:28 America/New_York
   - escape [ in append and prepend magic so that csh on Solaris is happy.

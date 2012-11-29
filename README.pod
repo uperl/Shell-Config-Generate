@@ -34,12 +34,16 @@ This:
 will generate a config.sh file with this:
 
  # this is my config file
- export FOO='bar';
- export PERL5LIB='/foo/bar/lib/perl5:/foo/bar/lib/perl5/perl5/site';
+ FOO='bar';
+ export FOO;
+ PERL5LIB='/foo/bar/lib/perl5:/foo/bar/lib/perl5/perl5/site';
+ export PERL5LIB;
  if [ -n "$PATH" ] ; then
-   export PATH=$PATH:'/foo/bar/bin:/bar/foo/bin';
+   PATH=$PATH:'/foo/bar/bin:/bar/foo/bin';
+   export PATH
  else
-   export PATH='/foo/bar/bin:/bar/foo/bin';
+   PATH='/foo/bar/bin:/bar/foo/bin';
+   export PATH;
  fi;
 
 and this:
