@@ -2,6 +2,12 @@ Revision history for {{$dist->name}}
 
 {{$NEXT}}
 
+0.06      2012-11-29 11:47:51 America/New_York
+  - fix for settting environment variables in traditional bourne shell
+
+0.05      2012-11-14 12:43:28 America/New_York
+  - escape [ in append and prepend magic so that csh on Solaris is happy.
+
 0.04      2012-11-13 02:41:59 EST5EDT
   - test against 44bsd-csh, if found in PATH, non "t" csh on FreeBSD
   - fix warnings on older Perls

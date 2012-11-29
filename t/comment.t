@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 use constant tests_per_shell => 1;
-use constant number_of_shells => 9;
+use constant number_of_shells => 10;
 use Test::More tests => (tests_per_shell * number_of_shells) + 3;
 use Shell::Config::Generate;
 use FindBin ();
@@ -25,7 +25,7 @@ $config->comment( "comment with a trailing backslash: \\" );
 eval { $config->set( FOO_SIMPLE_SET => 'bar' ) };
 diag $@ if $@;
 
-foreach my $shell (qw( tcsh csh bash sh zsh command.com cmd.exe ksh 44bsd-csh ))
+foreach my $shell (qw( tcsh csh bash sh zsh command.com cmd.exe ksh 44bsd-csh jsh ))
 {
   my $shell_path = find_shell($shell);
   SKIP: {
