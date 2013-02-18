@@ -54,7 +54,7 @@ will generate a config.csh with this:
  # this is my config file
  setenv FOO 'bar';
  setenv PERL5LIB '/foo/bar/lib/perl5:/foo/bar/lib/perl5/perl5/site';
- \[ "$?PATH" = 0 ] && setenv PATH '/foo/bar/bin:/bar/foo/bin' || setenv PATH "$PATH":'/foo/bar/bin:/bar/foo/bin';
+ test "$?PATH" = 0 && setenv PATH '/foo/bar/bin:/bar/foo/bin' || setenv PATH "$PATH":'/foo/bar/bin:/bar/foo/bin';
 
 and this:
 
@@ -414,7 +414,7 @@ sub generate
       if($shell->is_c)
       {
         my $value = join ':', map { _value_escape_csh($_) } @values;
-        $buffer .= "\\[ \"\$?$name\" = 0 ] && setenv $name '$value' || ";
+        $buffer .= "test \"\$?$name\" = 0 && setenv $name '$value' || ";
         if($command eq 'prepend_path')
         { $buffer .= "setenv $name '$value':\"\$$name\"" }
         else
@@ -506,7 +506,7 @@ them if they are found during the build of this module.
 The incantation for prepending and appending elements to a path
 on csh probably deserve a comment here.  It looks like this:
 
- \[ "$?PATH" = 0 ] && setenv PATH '/foo/bar/bin:/bar/foo/bin' || setenv PATH "$PATH":'/foo/bar/bin:/bar/foo/bin';
+ test "$?PATH" = 0 && setenv PATH '/foo/bar/bin:/bar/foo/bin' || setenv PATH "$PATH":'/foo/bar/bin:/bar/foo/bin';
 
 =over 4
 
