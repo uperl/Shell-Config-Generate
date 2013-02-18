@@ -33,12 +33,16 @@ This:
 will generate a config.sh file with this:
 
  # this is my config file
- export FOO='bar';
- export PERL5LIB='/foo/bar/lib/perl5:/foo/bar/lib/perl5/perl5/site';
+ FOO='bar';
+ export FOO;
+ PERL5LIB='/foo/bar/lib/perl5:/foo/bar/lib/perl5/perl5/site';
+ export PERL5LIB;
  if [ -n "$PATH" ] ; then
-   export PATH=$PATH:'/foo/bar/bin:/bar/foo/bin';
+   PATH=$PATH:'/foo/bar/bin:/bar/foo/bin';
+   export PATH
  else
-   export PATH='/foo/bar/bin:/bar/foo/bin';
+   PATH='/foo/bar/bin:/bar/foo/bin';
+   export PATH;
  fi;
 
 and this:
@@ -128,6 +132,8 @@ or
 
  #!/bin/csh
  eval `script.pl`
+
+=head1 CONSTRUCTOR
 
 =head2 Shell::Config::Generate->new
 
@@ -388,7 +394,8 @@ sub generate
       elsif($shell->is_bourne)
       {
         $value = _value_escape_sh($value);
-        $buffer .= "export $name='$value';\n";
+        $buffer .= "$name='$value';\n";
+        $buffer .= "export $name;\n";
       }
       elsif($shell->is_cmd || $shell->is_command)
       {
@@ -419,11 +426,11 @@ sub generate
         my $value = join ':', map { _value_escape_sh($_) } @values;
         $buffer .= "if [ -n \"\$$name\" ] ; then\n";
         if($command eq 'prepend_path')
-        { $buffer .= "  export $name='$value':\$$name;\n" }
+        { $buffer .= "  $name='$value':\$$name;\n  export $name;\n" }
         else
-        { $buffer .= "  export $name=\$$name:'$value';\n" }
+        { $buffer .= "  $name=\$$name:'$value';\n  export $name\n" }
         $buffer .= "else\n";
-        $buffer .= "  export $name='$value';\n";
+        $buffer .= "  $name='$value';\n  export $name;\n";
         $buffer .= "fi;\n";
       }
       elsif($shell->is_cmd || $shell->is_command)
