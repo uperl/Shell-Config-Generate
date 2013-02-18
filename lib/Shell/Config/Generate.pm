@@ -527,20 +527,6 @@ C<source> command or is included in a csh script inline.  If you
 try to invoke this code using csh C<eval> then it will helpfully
 convert it to one line and if does not work under csh in one line.
 
-=item * escaping [
-
-The initial [ is escaped.  This is not necessary in tcsh and newer
-versions of csh.  In older versions of csh, like the one which comes
-with Solaris an unescaped [ confuses either the shell or [ itself.
-
- % csh
- % [ "$?PATH" = 0 ] && setenv PATH '/foo/bar/bin:/bar/foo/bin' || setenv PATH "$PATH":'/foo/bar/bin:/bar/foo/bin';
- Missing ]
-
-44bsd-csh which comes with the FreeBSD ports collection does not 
-have this problem.  The only place I have see it or have been able to
-reproduce it is with the csh that comes with Solaris.
-
 =back
 
 There are probably more clever or prettier ways to 
