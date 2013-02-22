@@ -8,3 +8,5 @@ pod_spelling_system:
     - ideomatic
     - 44bsd-csh
     - inline
+    - cmd
+    - exe

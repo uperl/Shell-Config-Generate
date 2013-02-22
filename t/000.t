@@ -28,12 +28,12 @@ foreach my $path (split(($^O eq 'MSWin32' ? ';' : ':'), $ENV{PATH}))
 
 unless($found_square_bracket)
 {
-  diag "DID NOT FIND [, CSH TESTS WILL LIKELY FAIL";
+  diag "did not find [";
 }
 
 unless($found_test)
 {
-  diag "did not find test";
+  diag "DID NOT FIND test, CSH TEST WILL LIKELY FAIL";
 }
 
 pass 'okay';

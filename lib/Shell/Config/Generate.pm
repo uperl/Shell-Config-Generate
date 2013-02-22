@@ -503,6 +503,12 @@ are not available (for example C<cmd.exe> configurations from UNIX or
 bourne configurations under windows), but the test suite only tests
 them if they are found during the build of this module.
 
+The implementation for C<csh> depends on the external command C<test>.
+As far as I can tell C<test> should be available on all modern
+flavors of UNIX which are using C<csh>.  If anyone can figure out
+how to prepend or append to path type environment variable without
+an external command in C<csh>, then a patch would be appreciated.
+
 The incantation for prepending and appending elements to a path
 on csh probably deserve a comment here.  It looks like this:
 

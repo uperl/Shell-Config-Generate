@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - use test in place of [ for csh
 
 0.06_01   2013-02-18 15:47:36 America/New_York
   - documentation update
