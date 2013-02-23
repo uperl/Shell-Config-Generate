@@ -82,7 +82,10 @@ sub main::get_env
     print $fh "\@echo off\n" if $shell->is_command || $shell->is_cmd;
     eval { print $fh $config->generate($shell) };
     diag $@ if $@;
-    print $fh "$^X ", File::Spec->catfile($dir, 'dump.pl'), "\n";
+    my $perl_exe = $^X;
+    $perl_exe = Cygwin::posix_to_win_path($perl_exe)
+      if $^O eq 'cygwin' && $fn =~ /\.(bat|cmd)$/;
+    print $fh "$perl_exe ", File::Spec->catfile($dir, 'dump.pl'), "\n";
     close $fn;
   };
   

@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - support for testing against cmd.exe and command.com under cygwin
 
 0.06_03   2013-02-22 09:25:02 America/New_York
   - tone down diagnostic, display all shells found
