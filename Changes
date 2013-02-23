@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.07      2013-02-22 21:39:20 America/New_York
   - support for testing against cmd.exe and command.com under cygwin
 
 0.06_03   2013-02-22 09:25:02 America/New_York
