@@ -1,0 +1,9 @@
+language: perl
+install:
+  - cpanm -n Shell::Guess
+script: HARNESS_IS_VERBOSE=1 prove -lvr t xt
+perl:
+  - "5.16"
+  - "5.14"
+  - "5.12"
+  - "5.10"
