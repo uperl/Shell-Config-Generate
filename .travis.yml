@@ -1,5 +1,6 @@
 language: perl
 install:
+  - sudo apt-get install tcsh zsh ksh
   - cpanm -n Shell::Guess
 script: HARNESS_IS_VERBOSE=1 prove -lvr t xt
 perl:
