@@ -2,7 +2,7 @@ use strict;
 use warnings;
 use Test::More;
 BEGIN { 
-  plan skip_all => 'test requires Test::EOL' 
+  plan skip_all => 'test requires Test::Fixme' 
     unless eval q{ use Test::Fixme; 1 };
 };
 use Test::Fixme 0.07;
