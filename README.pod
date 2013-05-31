@@ -6,7 +6,7 @@ Shell::Config::Generate - Portably generate config for any shell
 
 =head1 VERSION
 
-version 0.07_01
+version 0.08
 
 =head1 SYNOPSIS
 

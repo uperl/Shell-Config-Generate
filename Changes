@@ -2,6 +2,8 @@ Revision history for {{$dist->name}}
 
 {{$NEXT}}
 
+0.08      2013-05-31 06:58:49 America/New_York
+
 0.07_01   2013-05-08 08:31:22 EST5EDT
   - also test against 'bsd-csh' if found
 
