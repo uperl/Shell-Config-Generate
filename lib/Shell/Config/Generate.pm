@@ -457,15 +457,27 @@ sub generate
         $buffer .= "  $name='$value';\n  export $name;\n";
         $buffer .= "fi;\n";
       }
-      elsif($shell->is_cmd || $shell->is_command)
+      elsif($shell->is_cmd || $shell->is_command || $shell->is_power)
       {
         my $value = join ';', map { _value_escape_win32($_) } @values;
-        $buffer .= "if defined $name (set ";
-        if($command eq 'prepend_path')
-        { $buffer .= "$name=$value;%$name%" }
+        if($shell->is_power)
+        {
+          $buffer .= "if(\$env:$name) { ";
+          if($command eq 'prepend_path')
+          { $buffer .= "\$env:$name = \"$value;\" + \$env:$name" }
+          else
+          { $buffer .= "\$env:$name = \$env:$name + \";$value\"" }
+          $buffer .= " } else { \$env:$name = \"$value\" }\n";
+        }
         else
-        { $buffer .= "$name=%$name%;$value" }
-        $buffer .=") else (set $name=$value)\n";
+        {
+          $buffer .= "if defined $name (set ";
+          if($command eq 'prepend_path')
+          { $buffer .= "$name=$value;%$name%" }
+          else
+          { $buffer .= "$name=%$name%;$value" }
+          $buffer .=") else (set $name=$value)\n";
+        }
       }
       else
       {
