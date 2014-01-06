@@ -35,6 +35,8 @@ foreach my $shell (qw( tcsh csh bsd-csh bash sh zsh cmd.exe command.com ksh 44bs
     note $config->generate($guess);
     plan skip_all => "no $shell found" unless defined $shell_path;
     plan skip_all => "not testing sh in case it doesn't support aliases" if $shell eq 'sh';
+    plan skip_all => "alias may not work with non-interactive cmd.exe or command.com"
+      if $shell eq 'cmd.exe' || $shell eq 'command.com';
     my $list = get_env($config, $shell, $shell_path, 'myecho1 one two three');
     is_deeply $list, [ qw( f00f one two three )], 'arguments match';
   };
