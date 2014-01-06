@@ -216,6 +216,21 @@ first line of the config:
 Turn off the echo off (that is do not put anything at the beginning of
 the config) for DOS/Windows configurations (`command.com` or `cmd.exe`).
 
+## $config->set\_alias( $alias => $command )
+
+Sets the given alias to the given command.
+
+Caveat:
+some older shells do not support aliases, such as
+the original bourne shell.  This module will generate
+aliases for those shells anyway, since /bin/sh may
+actually be a more modern shell that DOES support
+aliases, so do not use this method unless you can be
+reasonable sure that the shell you are generating
+supports aliases.  On Windows, for PowerShell, a simple
+function is used instead of an alias so that arguments
+may be specified.
+
 ## $config->generate( \[ $shell \] )
 
 Generate shell configuration code for the given shell.
