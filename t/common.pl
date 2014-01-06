@@ -47,17 +47,18 @@ sub main::tempdir
 }
 
 my %shell = (
-  tcsh          => 'tc_shell',
-  csh           => 'c_shell',
-  'bsd-csh'     => 'c_shell',
-  bash          => 'bash_shell',
-  sh            => 'bourne_shell',
-  zsh           => 'z_shell',
-  'command.com' => 'command_shell',
-  'cmd.exe'     => 'cmd_shell',
-  ksh           => 'korn_shell',
-  '44bsd-csh'   => 'c_shell',
-  jsh           => 'bourne_shell',
+  tcsh             => 'tc_shell',
+  csh              => 'c_shell',
+  'bsd-csh'        => 'c_shell',
+  bash             => 'bash_shell',
+  sh               => 'bourne_shell',
+  zsh              => 'z_shell',
+  'command.com'    => 'command_shell',
+  'cmd.exe'        => 'cmd_shell',
+  ksh              => 'korn_shell',
+  '44bsd-csh'      => 'c_shell',
+  jsh              => 'bourne_shell',
+  'powershell.exe' => 'power_shell',
 );
 
 sub get_guess
@@ -75,6 +76,7 @@ sub main::get_env
   my $fn = 'foo';
   $fn .= ".bat" if $shell->is_command;
   $fn .= ".cmd" if $shell->is_cmd;
+  $fn .= ".ps1" if $shell->is_power;
   $fn = File::Spec->catfile($dir, $fn);
   unlink $fn if -e $fn;
   do {
@@ -101,7 +103,19 @@ sub main::get_env
   chmod 0700, $fn;
 
   my $VAR1;
-  my $output = $shell->is_unix ? `$shell_path $fn` : `$fn`;
+  my $output;
+  if($shell->is_unix)
+  {
+    $output = `$shell_path $fn`;
+  }
+  elsif($shell->is_power)
+  {
+    $output = `$shell_path -File $fn`;
+  }
+  else
+  {
+    $output = `$fn`;
+  }
 
   my $fail = 0;  
   if ($? == -1)

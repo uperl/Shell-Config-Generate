@@ -24,7 +24,7 @@ foreach my $path (split(($^O eq 'MSWin32' ? ';' : ':'), $ENV{PATH}))
     $found_test = 1;
   }
   
-  foreach my $shell (qw( tcsh csh bash sh zsh command.com cmd.exe ksh 44bsd-csh jsh ))
+  foreach my $shell (qw( tcsh csh bash sh zsh command.com cmd.exe ksh 44bsd-csh jsh powershell.exe ))
   {
     if(-x File::Spec->catfile($path, $shell))
     {
