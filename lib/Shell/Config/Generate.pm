@@ -326,6 +326,14 @@ sub _value_escape_csh
   $value;
 }
 
+sub _value_escape_fish
+{
+  my $value = shift() . '';
+  $value =~ s/([\n])/\\$1/g;
+  $value =~ s/(')/'"$1"'/g;
+  $value;
+}
+
 sub _value_escape_sh
 {
   my $value = shift() . '';
@@ -339,6 +347,35 @@ sub _value_escape_win32
   $value =~ s/%/%%/g;
   $value =~ s/([&^|<>])/^$1/g;
   $value =~ s/\n/^\n\n/g;
+  $value;
+}
+
+#   `0  Null
+#   `a  Alert bell/beep
+#   `b  Backspace
+#   `f  Form feed (use with printer output)
+#   `n  New line
+#   `r  Carriage return
+# `r`n  Carriage return + New line
+#   `t  Horizontal tab
+#   `v  Vertical tab (use with printer output)
+
+my %ps = ( # microsoft would have to be different
+  "\0" => '`0',
+  "\a" => '`a',
+  "\b" => '`b',
+  "\f" => '`f',
+  "\r" => '`r',
+  "\n" => '`n',
+  "\t" => '`t',
+  #"\v" => '`v',
+);
+
+sub _value_escape_powershell
+{
+  my $value = shift() . '';
+  $value =~ s/(["'`\$#])/`$1/g;
+  $value =~ s/([\0\a\b\f\r\n\t\v])/$ps{$1}/eg;
   $value;
 }
 
@@ -416,6 +453,11 @@ sub generate
         $value = _value_escape_csh($value);
         $buffer .= "setenv $name '$value';\n";
       }
+      elsif($shell->is_fish)
+      {
+        $value = _value_escape_fish($value);
+        $buffer .= "set -x $name '$value';\n";
+      }
       elsif($shell->is_bourne)
       {
         $value = _value_escape_sh($value);
@@ -426,6 +468,11 @@ sub generate
       {
         $value = _value_escape_win32($value);
         $buffer .= "set $name=$value\n";
+      }
+      elsif($shell->is_power)
+      {
+        $value = _value_escape_powershell($value);
+        $buffer .= "\$env:$name = \"$value\"\n";
       }
       else
       {
@@ -458,15 +505,37 @@ sub generate
         $buffer .= "  $name='$value';\n  export $name;\n";
         $buffer .= "fi;\n";
       }
-      elsif($shell->is_cmd || $shell->is_command)
+      elsif($shell->is_fish)
       {
-        my $value = join ';', map { _value_escape_win32($_) } @values;
-        $buffer .= "if defined $name (set ";
+        my $value = join ' ', map { _value_escape_fish($_) } @values;
+        $buffer .= "if [ \"\$$name\" == \"\" ]; set -x $name $value; else; ";
         if($command eq 'prepend_path')
-        { $buffer .= "$name=$value;%$name%" }
+        { $buffer .= "set -x $name $value \$$name;" }
         else
-        { $buffer .= "$name=%$name%;$value" }
-        $buffer .=") else (set $name=$value)\n";
+        { $buffer .= "set -x $name \$$name $value;" }
+        $buffer .= "end\n";
+      }
+      elsif($shell->is_cmd || $shell->is_command || $shell->is_power)
+      {
+        my $value = join ';', map { $shell->is_power ? _value_escape_powershell($_) : _value_escape_win32($_) } @values;
+        if($shell->is_power)
+        {
+          $buffer .= "if(\$env:$name) { ";
+          if($command eq 'prepend_path')
+          { $buffer .= "\$env:$name = \"$value;\" + \$env:$name" }
+          else
+          { $buffer .= "\$env:$name = \$env:$name + \";$value\"" }
+          $buffer .= " } else { \$env:$name = \"$value\" }\n";
+        }
+        else
+        {
+          $buffer .= "if defined $name (set ";
+          if($command eq 'prepend_path')
+          { $buffer .= "$name=$value;%$name%" }
+          else
+          { $buffer .= "$name=%$name%;$value" }
+          $buffer .=") else (set $name=$value)\n";
+        }
       }
       else
       {
@@ -476,7 +545,7 @@ sub generate
 
     elsif($command eq 'comment')
     {
-      if($shell->is_unix)
+      if($shell->is_unix || $shell->is_power)
       {
         $buffer .= "# $_\n" for map { split /\n/, } @$args;
       }
@@ -540,9 +609,6 @@ sub generate_file
   close $fh;
 }
 
-# TODO alias
-# TODO PowerShell
-
 1;
 
 __END__
@@ -592,6 +658,8 @@ There are probably more clever or prettier ways to
 append/prepend path environment variables as I am not a shell
 programmer.  Patches welcome.
 
-Only UNIX and Windows are supported so far.  Patches welcome.
+Only UNIX (bourne, bash, csh, ksh and their derivatives) and
+Windows (command.com, cmd.exe and PowerShell) are supported so far.
+Patches welcome for your favorite shell / operating system.
 
 =cut

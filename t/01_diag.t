@@ -3,7 +3,9 @@ use warnings;
 use File::Spec;
 use Test::More tests => 1;
 
-diag "info";
+diag '';
+diag '';
+diag '';
 
 my $found_square_bracket = 0;
 my $found_test = 0;
@@ -42,5 +44,9 @@ unless($found_test)
 {
   diag "DID NOT FIND test, CSH TEST WILL LIKELY FAIL";
 }
+
+diag '';
+diag '';
+diag '';
 
 pass 'okay';

@@ -13,6 +13,7 @@ my $sep = $^O eq 'MSWin32' ? ';' : ':';
 sub main::find_shell
 {
   my $shell = shift;
+  #return if $shell eq 'powershell.exe' && $^O eq 'cygwin';
   return $shell if $shell eq 'cmd.exe' && $^O eq 'MSWin32' && Win32::IsWinNT();
   return $shell if $shell eq 'command.com' && $^O eq 'MSWin32';
   foreach my $path (split $sep, $ENV{PATH})
@@ -95,10 +96,11 @@ sub main::get_env
     {
       my $perl_exe = $^X;
       $perl_exe = Cygwin::posix_to_win_path($perl_exe)
-        if $^O eq 'cygwin' && $fn =~ /\.(bat|cmd)$/;
+        if $^O eq 'cygwin' && $fn =~ /\.(bat|cmd|ps1)$/;
       print $fh "$perl_exe ", File::Spec->catfile($dir, 'dump.pl'), "\n";
       close $fn;
     }
+    print $fh "exit\n" if $shell->is_power;
   };
   
   chmod 0700, $fn;
@@ -107,17 +109,22 @@ sub main::get_env
   my $output;
   if($shell->is_unix)
   {
+    #diag `cat $fn`;
     $output = `$shell_path $fn`;
   }
   elsif($shell->is_power)
   {
-    $output = `$shell_path -File $fn`;
+    #diag `cat $fn`;
+    my $fn2 = $fn;
+    $fn2 = Cygwin::posix_to_win_path($fn) if $^O eq 'cygwin';
+    $fn2 =~ s{\\}{/}g;
+    $output = `$shell_path -inputformat none -NoProfile -File $fn2`;
   }
   else
   {
     $output = `$fn`;
   }
-
+  
   my $fail = 0;  
   if ($? == -1)
   {
@@ -143,6 +150,14 @@ sub main::get_env
   eval $output;
   
   return $VAR1;
+}
+
+sub main::bad_fish
+{
+  my $path = shift;
+  my $dir = File::Spec->catdir(tempdir( CLEANUP => 1 ), qw( one two three ));
+  system $path, -c => "setenv PATH \$PATH $dir";
+  $? != 0;
 }
 
 1;

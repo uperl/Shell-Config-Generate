@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 use constant tests_per_shell => 2;
-use constant number_of_shells => 11;
+use constant number_of_shells => 13;
 use Test::More tests => (tests_per_shell * number_of_shells) + 3;
 use Shell::Config::Generate;
 use FindBin ();
@@ -25,11 +25,14 @@ delete $ENV{FOO_PATH2};
 
 $config->append_path( FOO_PATH2 => qw( foo bar baz ) );
 
-foreach my $shell (qw( tcsh csh bsd-csh bash sh zsh cmd.exe command.com ksh 44bsd-csh jsh fish ))
+foreach my $shell (qw( tcsh csh bsd-csh bash sh zsh cmd.exe command.com ksh 44bsd-csh jsh powershell.exe fish ))
 {
   my $shell_path = find_shell($shell);
   SKIP: {
     skip "no $shell found", tests_per_shell unless defined $shell_path;
+    skip "bad fish", tests_per_shell
+      if $shell eq 'fish'
+      && bad_fish($shell_path);
 
     my $env = get_env($config, $shell, $shell_path);
 
