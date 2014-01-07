@@ -27,7 +27,7 @@ do {
 eval { $config->set_alias("myecho1", "$^X $script_name f00f") };
 is $@, '', 'set_alias';
 
-foreach my $shell (qw( tcsh csh bsd-csh bash sh zsh cmd.exe command.com ksh 44bsd-csh jsh powershell.exe ))
+foreach my $shell (qw( tcsh csh bsd-csh bash sh zsh cmd.exe command.com ksh 44bsd-csh jsh ))
 {
   subtest $shell => sub {
     my $shell_path = find_shell($shell);
@@ -43,3 +43,21 @@ foreach my $shell (qw( tcsh csh bsd-csh bash sh zsh cmd.exe command.com ksh 44bs
     is_deeply $list, [ qw( f00f one two three )], 'arguments match';
   };
 }
+
+subtest 'powershell.exe' => sub {
+  my $shell = 'powershell.exe';
+  my $shell_path = find_shell($shell);
+  my $guess = TestLib::get_guess($shell);
+  
+  if($^O eq 'cygwin')
+  {
+    $config = Shell::Config::Generate->new;
+    $config->set_alias("myecho1", sprintf("%s %s f00f", map { Cygwin::posix_to_win_path($_) } $^X, $script_name ));
+  }
+  
+  note $config->generate($guess);
+  plan skip_all => "no powershell.exe found" unless defined $shell_path;
+  
+  my $list = get_env($config, $shell, $shell_path, 'myecho1 one two three');
+  is_deeply $list, [ qw( f00f one two three )], 'arguments match';  
+};
