@@ -1,0 +1,9 @@
+ExtUtils::MakeMaker
+File::Spec
+File::Temp
+FindBin
+Shell::Guess
+Test::Differences
+Test::More
+autodie
+constant
