@@ -156,7 +156,14 @@ sub main::bad_fish
 {
   my $path = shift;
   my $dir = File::Spec->catdir(tempdir( CLEANUP => 1 ), qw( one two three ));
-  system $path, -c => "setenv PATH \$PATH $dir";
+  
+  require IPC::Open3;
+  my $pid = IPC::Open3::open3(\*IN, \*OUT, \*ERR, $path, -c => "setenv PATH \$PATH $dir");
+  waitpid $pid, $?;
+  
+  my $str = do { local $/; <ERR> };
+  #diag "str = \"$str\"";
+  
   $? != 0;
 }
 
