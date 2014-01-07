@@ -59,6 +59,7 @@ my %shell = (
   '44bsd-csh'      => 'c_shell',
   jsh              => 'bourne_shell',
   'powershell.exe' => 'power_shell',
+  'fish'           => 'fish_shell',
 );
 
 sub get_guess

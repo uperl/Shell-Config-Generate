@@ -25,7 +25,7 @@ delete $ENV{FOO_PATH2};
 
 $config->append_path( FOO_PATH2 => qw( foo bar baz ) );
 
-foreach my $shell (qw( tcsh csh bsd-csh bash sh zsh cmd.exe command.com ksh 44bsd-csh jsh ))
+foreach my $shell (qw( tcsh csh bsd-csh bash sh zsh cmd.exe command.com ksh 44bsd-csh jsh fish ))
 {
   my $shell_path = find_shell($shell);
   SKIP: {

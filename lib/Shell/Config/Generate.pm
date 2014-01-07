@@ -3,6 +3,7 @@ package Shell::Config::Generate;
 use strict;
 use warnings;
 use Shell::Guess;
+use Carp qw( croak );
 
 # ABSTRACT: Portably generate config for any shell
 # VERSION
@@ -428,7 +429,7 @@ sub generate
       }
       else
       {
-        die 'don\'t know how to "set" with ' . $shell->name;
+        croak 'don\'t know how to "set" with ' . $shell->name;
       }
     }
 
@@ -469,7 +470,7 @@ sub generate
       }
       else
       {
-        die 'don\'t know how to "append_path" with ' . $shell->name;
+        croak 'don\'t know how to "append_path" with ' . $shell->name;
       }
     }
 
@@ -485,7 +486,7 @@ sub generate
       }
       else
       {
-        die 'don\'t know how to "comment" with ' . $shell->name;
+        croak 'don\'t know how to "comment" with ' . $shell->name;
       }
     }
     
@@ -506,6 +507,14 @@ sub generate
       elsif($shell->is_power)
       {
         $buffer .= "function $args->[0] { $args->[1] \$args }\n";
+      }
+      elsif($shell->is_fish)
+      {
+        $buffer .= "alias $args->[0] '$args->[1]';\n";
+      }
+      else
+      {
+        croak 'don\'t know how to "alias" with ' . $shell->name;
       }
     }
   }

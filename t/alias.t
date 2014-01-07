@@ -2,7 +2,7 @@ use strict;
 use warnings;
 use FindBin ();
 use File::Spec;
-use Test::More tests => 15;
+use Test::More tests => 16;
 use Shell::Guess;
 use Shell::Config::Generate;
 
@@ -27,7 +27,7 @@ do {
 eval { $config->set_alias("myecho1", "$^X $script_name f00f") };
 is $@, '', 'set_alias';
 
-foreach my $shell (qw( tcsh csh bsd-csh bash sh zsh cmd.exe command.com ksh 44bsd-csh jsh powershell.exe ))
+foreach my $shell (qw( tcsh csh bsd-csh bash sh zsh cmd.exe command.com ksh 44bsd-csh jsh powershell.exe fish ))
 {
   subtest $shell => sub {
     my $shell_path = find_shell($shell);
