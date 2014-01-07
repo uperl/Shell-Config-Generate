@@ -658,8 +658,15 @@ There are probably more clever or prettier ways to
 append/prepend path environment variables as I am not a shell
 programmer.  Patches welcome.
 
-Only UNIX (bourne, bash, csh, ksh and their derivatives) and
+Only UNIX (bourne, bash, csh, ksh, fish and their derivatives) and
 Windows (command.com, cmd.exe and PowerShell) are supported so far.
+
+Fish shell support should be considered a tech preview.  The Fish
+shell itself is somewhat in flux, and thus some tests are skipped
+for the Fish shell since behavior is different for different versions.
+In particular, new lines in environment variables may not work on
+newer versions.
+
 Patches welcome for your favorite shell / operating system.
 
 =cut
