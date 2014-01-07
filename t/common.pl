@@ -118,7 +118,7 @@ sub main::get_env
     my $fn2 = $fn;
     $fn2 = Cygwin::posix_to_win_path($fn) if $^O eq 'cygwin';
     $fn2 =~ s{\\}{/}g;
-    $output = `$shell_path -inputformat none -NoProfile -File $fn2`;
+    $output = `$shell_path -ExecutionPolicy RemoteSigned -InputFormat none -NoProfile -File $fn2`;
   }
   else
   {
