@@ -71,7 +71,7 @@ arcane differences between shells such as csh, sh, cmd.exe and command.com.
 It does not modify the current environment, but it can be used to
 create shell configurations which do modify the environment.
 
-This module uses [Shell::Guess](http://search.cpan.org/perldoc?Shell::Guess) to represent the different types
+This module uses [Shell::Guess](https://metacpan.org/pod/Shell::Guess) to represent the different types
 of shells that are supported.  In this way you can statically specify
 just one or more shells:
 
@@ -107,7 +107,7 @@ or
     C:\> foo.bat
 
 Alternatively you can use the shell that called your Perl script using
-[Shell::Guess](http://search.cpan.org/perldoc?Shell::Guess)'s `running_shell` method, and write the output to
+[Shell::Guess](https://metacpan.org/pod/Shell::Guess)'s `running_shell` method, and write the output to
 standard out.
 
     #!/usr/bin/perl
@@ -219,7 +219,7 @@ the config) for DOS/Windows configurations (`command.com` or `cmd.exe`).
 ## $config->generate( \[ $shell \] )
 
 Generate shell configuration code for the given shell.
-$shell is an instance of [Shell::Guess](http://search.cpan.org/perldoc?Shell::Guess).  If $shell
+$shell is an instance of [Shell::Guess](https://metacpan.org/pod/Shell::Guess).  If $shell
 is not provided, then this method will use Shell::Guess
 to guess the shell that called your perl script.
 
@@ -227,7 +227,7 @@ to guess the shell that called your perl script.
 
 Generate shell configuration code for the given shell
 and write it to the given file.  $shell is an instance 
-of [Shell::Guess](http://search.cpan.org/perldoc?Shell::Guess).  If there is an IO error it will throw
+of [Shell::Guess](https://metacpan.org/pod/Shell::Guess).  If there is an IO error it will throw
 an exception.
 
 # CAVEATS
