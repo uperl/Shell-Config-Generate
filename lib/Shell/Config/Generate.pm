@@ -577,9 +577,6 @@ sub generate_file
   close $fh;
 }
 
-# TODO alias
-# TODO PowerShell
-
 1;
 
 __END__
@@ -629,6 +626,8 @@ There are probably more clever or prettier ways to
 append/prepend path environment variables as I am not a shell
 programmer.  Patches welcome.
 
-Only UNIX and Windows are supported so far.  Patches welcome.
+Only UNIX (bourne, bash, csh, ksh and their derivatives) and
+Windows (command.com, cmd.exe and PowerShell) are supported so far.
+Patches welcome for your favorite shell / operating system.
 
 =cut
