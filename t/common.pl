@@ -112,6 +112,7 @@ sub main::get_env
   }
   elsif($shell->is_power)
   {
+    #diag `cat $fn`;
     my $fn2 = $fn;
     $fn2 = Cygwin::posix_to_win_path($fn) if $^O eq 'cygwin';
     $fn2 =~ s{\\}{/}g;
@@ -121,7 +122,7 @@ sub main::get_env
   {
     $output = `$fn`;
   }
-
+  
   my $fail = 0;  
   if ($? == -1)
   {

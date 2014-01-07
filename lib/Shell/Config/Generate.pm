@@ -341,6 +341,35 @@ sub _value_escape_win32
   $value;
 }
 
+#   `0  Null
+#   `a  Alert bell/beep
+#   `b  Backspace
+#   `f  Form feed (use with printer output)
+#   `n  New line
+#   `r  Carriage return
+# `r`n  Carriage return + New line
+#   `t  Horizontal tab
+#   `v  Vertical tab (use with printer output)
+
+my %ps = ( # microsoft would have to be different
+  "\0" => '`0',
+  "\a" => '`a',
+  "\b" => '`b',
+  "\f" => '`f',
+  "\r" => '`r',
+  "\n" => '`n',
+  "\t" => '`t',
+  #"\v" => '`v',
+);
+
+sub _value_escape_powershell
+{
+  my $value = shift() . '';
+  $value =~ s/(["'`\$#])/`$1/g;
+  $value =~ s/([\0\a\b\f\r\n\t\v])/$ps{$1}/eg;
+  $value;
+}
+
 =head2 $config-E<gt>set_alias( $alias => $command )
 
 Sets the given alias to the given command.
@@ -426,6 +455,11 @@ sub generate
         $value = _value_escape_win32($value);
         $buffer .= "set $name=$value\n";
       }
+      elsif($shell->is_power)
+      {
+        $value = _value_escape_powershell($value);
+        $buffer .= "\$env:$name = \"$value\"\n";
+      }
       else
       {
         die 'don\'t know how to "set" with ' . $shell->name;
@@ -459,7 +493,7 @@ sub generate
       }
       elsif($shell->is_cmd || $shell->is_command || $shell->is_power)
       {
-        my $value = join ';', map { _value_escape_win32($_) } @values;
+        my $value = join ';', map { $shell->is_power ? _value_escape_powershell($_) : _value_escape_win32($_) } @values;
         if($shell->is_power)
         {
           $buffer .= "if(\$env:$name) { ";
@@ -487,7 +521,7 @@ sub generate
 
     elsif($command eq 'comment')
     {
-      if($shell->is_unix)
+      if($shell->is_unix || $shell->is_power)
       {
         $buffer .= "# $_\n" for map { split /\n/, } @$args;
       }
