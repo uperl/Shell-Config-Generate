@@ -1,9 +1,11 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.09      2014-01-07 09:25:01 -0500
   - New set_alias method for defining simple aliases
   - Support for Windows PowerShell (tests on cygwin + MSWin32)
-  - Support for fish shell
+  - Support for fish shell (tech preview)
 
 0.08      2013-05-31 06:58:49 America/New_York
   - promote to production
