@@ -81,13 +81,21 @@ sub main::get_env
     open(my $fh, '>', $fn) || die "unable to write to $fn $!";
     print $fh "#!$shell_path\n" if $shell->is_unix;
     print $fh "\@echo off\n" if $shell->is_command || $shell->is_cmd;
+    print $fh "shopt -s expand_aliases\n" if $shell_path =~  /bash(.exe)?$/;
     eval { print $fh $config->generate($shell) };
     diag $@ if $@;
-    my $perl_exe = $^X;
-    $perl_exe = Cygwin::posix_to_win_path($perl_exe)
-      if $^O eq 'cygwin' && $fn =~ /\.(bat|cmd)$/;
-    print $fh "$perl_exe ", File::Spec->catfile($dir, 'dump.pl'), "\n";
-    close $fn;
+    if(@_)
+    {
+      print $fh "$_\n" for @_;
+    }
+    else
+    {
+      my $perl_exe = $^X;
+      $perl_exe = Cygwin::posix_to_win_path($perl_exe)
+        if $^O eq 'cygwin' && $fn =~ /\.(bat|cmd)$/;
+      print $fh "$perl_exe ", File::Spec->catfile($dir, 'dump.pl'), "\n";
+      close $fn;
+    }
   };
   
   chmod 0700, $fn;
