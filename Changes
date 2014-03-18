@@ -2,6 +2,9 @@ Revision history for {{$dist->name}}
 
 {{$NEXT}}
 
+0.10      2014-03-18 12:27:31 -0400
+  - fix for test hang on OpenBSD (GH#7)
+
 0.09      2014-01-07 09:25:01 -0500
   - New set_alias method for defining simple aliases
   - Support for Windows PowerShell (tests on cygwin + MSWin32)
