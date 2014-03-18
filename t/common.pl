@@ -10,6 +10,22 @@ use Shell::Guess;
 
 my $sep = $^O eq 'MSWin32' ? ';' : ':';
 
+sub shell_is_okay
+{
+  my($shell, $full_path) = @_;
+  
+  if($shell eq 'fish' && -x $full_path)
+  {
+    require IPC::Open3;
+    my $pid = IPC::Open3::open3(\*IN, \*OUT, \*ERR, $full_path, '--version');
+    waitpid $pid, 0;
+    while(<ERR>) { note $_ }
+    return $? == 0;
+  }
+  
+  return 1 if -x $full_path;
+}
+
 sub main::find_shell
 {
   my $shell = shift;
@@ -19,7 +35,7 @@ sub main::find_shell
   foreach my $path (split $sep, $ENV{PATH})
   {
     my $full = File::Spec->catfile($path, $shell);
-    return $full if -x $full;
+    return $full if shell_is_okay($shell, $full);
   }
   
   return;
