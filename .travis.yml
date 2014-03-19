@@ -5,6 +5,7 @@ install:
   - cpanm -n Dist::Zilla
   - dzil authordeps --missing | cpanm -n
   - cpanm -n Shell::Guess
+  - cpanm -n Test::CPAN::Changes Test::EOL Test::Fixme Test::NoTabs Test::Pod::Spelling::CommonMistakes Test::Spelling Test::Strict Test::Version || true
 
 script: HARNESS_IS_VERBOSE=1 prove -lvr t xt
 
