@@ -375,7 +375,7 @@ sub _value_escape_powershell
 {
   my $value = shift() . '';
   $value =~ s/(["'`\$#])/`$1/g;
-  $value =~ s/([\0\a\b\f\r\n\t\v])/$ps{$1}/eg;
+  $value =~ s/([\0\a\b\f\r\n\t])/$ps{$1}/eg;
   $value;
 }
 

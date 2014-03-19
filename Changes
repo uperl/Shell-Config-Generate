@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - support for Perl 5.8
 
 0.10      2014-03-18 12:27:31 -0400
   - fix for test hang on OpenBSD (GH#7)
