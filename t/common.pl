@@ -99,7 +99,12 @@ sub main::get_env
   unlink $fn if -e $fn;
   do {
     open(my $fh, '>', $fn) || die "unable to write to $fn $!";
-    print $fh "#!$shell_path\n" if $shell->is_unix;
+    if($shell->is_unix)
+    {
+      print $fh "#!$shell_path";
+      print $fh " -f" if $shell->is_c;
+      print $fh "\n";
+    }
     print $fh "\@echo off\n" if $shell->is_command || $shell->is_cmd;
     print $fh "shopt -s expand_aliases\n" if $shell_path =~  /bash(.exe)?$/;
     eval { print $fh $config->generate($shell) };
@@ -126,7 +131,14 @@ sub main::get_env
   if($shell->is_unix)
   {
     #diag `cat $fn`;
-    $output = `$shell_path $fn`;
+    if($shell->is_c)
+    {
+      $output = `$shell_path -f $fn`;
+    }
+    else
+    {
+      $output = `$shell_path $fn`;
+    }
   }
   elsif($shell->is_power)
   {
