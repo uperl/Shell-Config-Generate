@@ -1,3 +1,4 @@
+Exporter
 ExtUtils::MakeMaker
 File::Spec
 File::Temp
