@@ -1,8 +1,11 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - make win32_space_be_gone a little less aggressive
+    don't modify long paths (non 8.3) that don't have spaces
 
 0.14      2014-05-27 19:22:19 -0400
+  - added win32_space_be_gone function
 
 0.12      2014-04-08 17:45:06 -0400
   - use -f option with tcsh/csh in testing

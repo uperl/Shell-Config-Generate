@@ -1,3 +1,4 @@
+Exporter
 File::Spec
 File::Temp
 FindBin
