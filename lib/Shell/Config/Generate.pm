@@ -644,7 +644,6 @@ Returns the same list passed into it
 sub win32_space_be_gone
 {
   return @_ if $^O !~ /^(MSWin32|cygwin)$/;
-  require Config;
   map { _win_to_posix_path(Win32::GetShortPathName(_posix_to_win_path($_))) } @_;
 }
 
