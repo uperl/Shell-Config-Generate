@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use Shell::Guess;
 use Carp qw( croak );
+use Exporter ();
 
 # ABSTRACT: Portably generate config for any shell
 # VERSION
@@ -607,6 +608,44 @@ sub generate_file
   open my $fh, '>', $filename;
   print $fh $self->generate($shell);
   close $fh;
+}
+
+*import = \&Exporter::import;
+
+our @EXPORT_OK = qw( win32_space_be_gone );
+
+=head1 FUNCTIONS
+
+=head2 win32_space_be_gone( @path_list )
+
+On C<MSWin32> and C<cygwin>:
+
+Given a list of directory paths (or filenames), this will
+return an equivalent list of paths pointing to the same 
+file system objects without spaces.  To do this 
+C<Win32::GetShortPathName()> is used on to find alternative
+path names without spaces.
+
+In addition, on just C<Cygwin>:
+
+The input paths are first converted from POSIX to Windows paths
+using C<Cygwin::posix_to_win_path>, and then converted back to
+POSIX paths using C<Cygwin::win_to_posix_path>.
+
+Elsewhere:
+
+Returns the same list passed into it
+
+=cut
+
+*_win_to_posix_path = $^O eq 'cygwin' ? \&Cygwin::win_to_posix_path : sub {};
+*_posix_to_win_path = $^O eq 'cygwin' ? \&Cygwin::posix_to_win_path : sub {};
+
+sub win32_space_be_gone
+{
+  return @_ if $^O !~ /^(MSWin32|cygwin)$/;
+  require Config;
+  map { _win_to_posix_path(Win32::GetShortPathName(_posix_to_win_path($_))) } @_;
 }
 
 1;

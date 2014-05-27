@@ -188,7 +188,7 @@ it doesn't already exist, or add to an existing value.
 
 This will generate a comment in the appropriate format.
 
-__note__ that including comments in your configuration may mean
+**note** that including comments in your configuration may mean
 it will not work with the `eval` backticks method for importing
 configurations into your shell.
 
@@ -200,7 +200,7 @@ will be ignored.  If specified, $location will be used as the
 interpreter location.  If it is not specified, then the default
 location for the shell will be used.
 
-__note__ that the shebang in your configuration may mean
+**note** that the shebang in your configuration may mean
 it will not work with the `eval` backticks method for importing
 configurations into your shell.
 
@@ -244,6 +244,28 @@ Generate shell configuration code for the given shell
 and write it to the given file.  $shell is an instance 
 of [Shell::Guess](https://metacpan.org/pod/Shell::Guess).  If there is an IO error it will throw
 an exception.
+
+# FUNCTIONS
+
+## win32\_space\_be\_gone( @path\_list )
+
+On `MSWin32` and `cygwin`:
+
+Given a list of directory paths (or filenames), this will
+return an equivalent list of paths pointing to the same 
+file system objects without spaces.  To do this 
+`Win32::GetShortPathName()` is used on to find alternative
+path names without spaces.
+
+In addition, on just `Cygwin`:
+
+The input paths are first converted from POSIX to Windows paths
+using `Cygwin::posix_to_win_path`, and then converted back to
+POSIX paths using `Cygwin::win_to_posix_path`.
+
+Elsewhere:
+
+Returns the same list passed into it
 
 # CAVEATS
 
