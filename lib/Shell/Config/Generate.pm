@@ -638,8 +638,8 @@ Returns the same list passed into it
 
 =cut
 
-*_win_to_posix_path = $^O eq 'cygwin' ? \&Cygwin::win_to_posix_path : sub {};
-*_posix_to_win_path = $^O eq 'cygwin' ? \&Cygwin::posix_to_win_path : sub {};
+*_win_to_posix_path = $^O eq 'cygwin' ? \&Cygwin::win_to_posix_path : sub { $_[0] };
+*_posix_to_win_path = $^O eq 'cygwin' ? \&Cygwin::posix_to_win_path : sub { $_[0] };
 
 sub win32_space_be_gone
 {

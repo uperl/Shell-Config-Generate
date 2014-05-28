@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - fix win32_space_be_gone on MSWin32
 
 0.15      2014-05-27 19:44:57 -0400
   - make win32_space_be_gone a little less aggressive
