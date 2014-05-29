@@ -231,6 +231,15 @@ supports aliases.  On Windows, for PowerShell, a simple
 function is used instead of an alias so that arguments
 may be specified.
 
+## $config->set\_path\_sep( $sep )
+
+Use `$sep` as the path separator instead of the shell
+default path separator (generally `:` for Unix shells 
+and `;` for Windows shells).
+
+Not all characters are supported, it is usually best
+to stick with the shell default or to use `:` or `;`.
+
 ## $config->generate( \[ $shell \] )
 
 Generate shell configuration code for the given shell.

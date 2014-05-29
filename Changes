@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - add set_path_sep method
 
 0.16      2014-05-28 05:55:04 -0400
   - fix win32_space_be_gone on MSWin32

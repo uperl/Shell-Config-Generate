@@ -404,6 +404,23 @@ sub set_alias
   push @{ $self->{commands} }, ['alias', $alias, $command]; 
 }
 
+=head2 $config-E<gt>set_path_sep( $sep )
+
+Use C<$sep> as the path separator instead of the shell
+default path separator (generally C<:> for Unix shells 
+and C<;> for Windows shells).
+
+Not all characters are supported, it is usually best
+to stick with the shell default or to use C<:> or C<;>.
+
+=cut
+
+sub set_path_sep
+{
+  my($self, $sep) = @_;
+  push @{ $self->{commands} }, ['set_path_sep', $sep];
+}
+
 =head2 $config-E<gt>generate( [ $shell ] )
 
 Generate shell configuration code for the given shell.
@@ -439,6 +456,12 @@ sub generate
   {
     my $command = shift @$args;
 
+    if($command eq 'set_path_sep')
+    {
+      $sep = shift @$args;
+      next;
+    }
+    
     # rewrite set_path as set
     if($command eq 'set_path')
     {
@@ -490,9 +513,9 @@ sub generate
         my $value = join $sep, map { _value_escape_csh($_) } @values;
         $buffer .= "test \"\$?$name\" = 0 && setenv $name '$value' || ";
         if($command eq 'prepend_path')
-        { $buffer .= "setenv $name '$value'$sep\"\$$name\"" }
+        { $buffer .= "setenv $name '$value$sep'\"\$$name\"" }
         else
-        { $buffer .= "setenv $name \"\$$name\"$sep'$value'" }
+        { $buffer .= "setenv $name \"\$$name\"'$sep$value'" }
         $buffer .= ";\n";
       }
       elsif($shell->is_bourne)
@@ -500,9 +523,9 @@ sub generate
         my $value = join $sep, map { _value_escape_sh($_) } @values;
         $buffer .= "if [ -n \"\$$name\" ] ; then\n";
         if($command eq 'prepend_path')
-        { $buffer .= "  $name='$value'$sep\$$name;\n  export $name;\n" }
+        { $buffer .= "  $name='$value$sep'\$$name;\n  export $name;\n" }
         else
-        { $buffer .= "  $name=\$$name$sep'$value';\n  export $name\n" }
+        { $buffer .= "  $name=\$$name'$sep$value';\n  export $name\n" }
         $buffer .= "else\n";
         $buffer .= "  $name='$value';\n  export $name;\n";
         $buffer .= "fi;\n";
