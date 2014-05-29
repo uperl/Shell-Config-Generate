@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.17      2014-05-28 20:25:10 -0400
   - add set_path_sep method
 
 0.16      2014-05-28 05:55:04 -0400
