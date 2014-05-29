@@ -42,6 +42,8 @@ foreach my $sep (undef, ':', ';', '|')
       my $shell_path = find_shell($shell);
       SKIP: {
         skip "no $shell found", tests_per_shell unless defined $shell_path;
+        skip "| not supported for cmd.exe or command.com", tests_per_shell
+          if ($sep||'') eq '|' && $shell =~ /^(command.com|cmd.exe)$/;
         skip "bad fish", tests_per_shell
           if $shell eq 'fish'
           && bad_fish($shell_path);
