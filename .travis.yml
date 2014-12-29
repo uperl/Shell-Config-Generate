@@ -2,8 +2,8 @@ language: perl
 
 install:
   - sudo apt-get install tcsh zsh ksh csh fish
-  - cpanm -n Dist::Zilla
   - sudo chown -R `whoami` /usr/local
+  - cpanm -n Dist::Zilla
   - dzil authordeps --missing | cpanm -n
   - cpanm -n Shell::Guess
   - cpanm -n Test::CPAN::Changes Test::EOL Test::Fixme Test::NoTabs Test::Pod::Spelling::CommonMistakes Test::Spelling Test::Strict Test::Version || true
