@@ -2,10 +2,10 @@ language: perl
 
 install:
   - sudo apt-get install tcsh zsh ksh csh fish
-  - cpanm -n Dist::Zilla
-  - dzil authordeps --missing | cpanm -n
-  - cpanm -n Shell::Guess
-  - cpanm -n Test::CPAN::Changes Test::EOL Test::Fixme Test::NoTabs Test::Pod::Spelling::CommonMistakes Test::Spelling Test::Strict Test::Version || true
+  - sudo cpanm -n Dist::Zilla
+  - dzil authordeps --missing | sudo cpanm -n
+  - sudo cpanm -n Shell::Guess
+  - sudo cpanm -n Test::CPAN::Changes Test::EOL Test::Fixme Test::NoTabs Test::Pod::Spelling::CommonMistakes Test::Spelling Test::Strict Test::Version || true
 
 script: HARNESS_IS_VERBOSE=1 prove -lvr t xt
 
