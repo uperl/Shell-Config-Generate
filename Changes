@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.18      2015-01-10 18:17:07 -0500
   - do not test against jsh (FreeBSD "job" shell) unless it
     can be determined to really be that shell.z
 
