@@ -1,10 +1,5 @@
-Exporter
-File::Spec
-File::Temp
-FindBin
 Module::Build
 Shell::Guess
 Test::Differences
 Test::More
 autodie
-constant
