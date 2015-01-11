@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - do not test against jsh (FreeBSD "job" shell) unless it
+    can be determined to really be that shell.z
 
 0.17      2014-05-28 20:25:10 -0400
   - add set_path_sep method
