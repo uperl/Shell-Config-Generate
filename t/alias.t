@@ -30,6 +30,7 @@ is $@, '', 'set_alias';
 foreach my $shell (qw( tcsh csh bsd-csh bash sh zsh cmd.exe command.com ksh 44bsd-csh jsh powershell.exe fish ))
 {
   subtest $shell => sub {
+    plan skip_all => 'jsh does not have aliases' if $shell eq 'jsh';
     my $shell_path = find_shell($shell);
     my $guess = TestLib::get_guess($shell);
     note $config->generate($guess);
