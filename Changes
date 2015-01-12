@@ -1,6 +1,9 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - Update test suite to skip testing "fish" (not a shell) that
+    comes with Perl Power Tools.  Still test fish (when a shell)
+    if it is found.
 
 0.18      2015-01-10 18:17:07 -0500
   - do not test against jsh (FreeBSD "job" shell) unless it

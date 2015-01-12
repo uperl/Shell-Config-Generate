@@ -14,16 +14,7 @@ sub shell_is_okay
 {
   my($shell, $full_path) = @_;
   
-  if($shell eq 'fish' && -x $full_path)
-  {
-    require IPC::Open3;
-    my $pid = IPC::Open3::open3(\*IN, \*OUT, \*ERR, $full_path, '--version');
-    waitpid $pid, 0;
-    while(<ERR>) { note $_ }
-    return $? == 0;
-  }
-  
-  if($shell eq 'jsh' && -x $full_path)
+  if($shell =~ /^(jsh|fish)$/ && -x $full_path)
   {
     require IPC::Open3;
     my $pid = IPC::Open3::open3(\*IN, \*OUT, \*ERR, $full_path, '-c' => 'exit 22');
