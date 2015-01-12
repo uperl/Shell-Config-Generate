@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.19      2015-01-12 08:06:27 -0500
   - Update test suite to skip testing "fish" (not a shell) that
     comes with Perl Power Tools.  Still test fish (when a shell)
     if it is found.
