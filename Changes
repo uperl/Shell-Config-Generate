@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - Attempt to verify that we can execute Power Shell scripts before
+    trying to execute Power Shell scripts in test.
 
 0.19      2015-01-12 08:06:27 -0500
   - Update test suite to skip testing "fish" (not a shell) that

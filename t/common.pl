@@ -22,6 +22,12 @@ sub shell_is_okay
     while(<ERR>) { note $_ }
     return $? >> 8 == 22;
   }
+  
+  if($shell =~ /^powershell.exe$/ && -e $full_path)
+  {
+    `$full_path -ExecutionPolicy RemoteSigned -InputFormat none -NoProfile -File t\\true.ps1`;
+    return $? == 0;
+  }
 
   return 1 if -x $full_path;
 }
