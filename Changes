@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.20      2015-02-19 18:53:28 -0500
   - Attempt to verify that we can execute Power Shell scripts before
     trying to execute Power Shell scripts in test.
 
