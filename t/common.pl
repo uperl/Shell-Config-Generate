@@ -25,6 +25,7 @@ sub shell_is_okay
   
   if($shell =~ /^powershell.exe$/ && -e $full_path)
   {
+    return 0 if $ENV{ACTIVESTATE_PPM_BUILD};
     `$full_path -ExecutionPolicy RemoteSigned -InputFormat none -NoProfile -File t\\true.ps1`;
     return $? == 0;
   }
