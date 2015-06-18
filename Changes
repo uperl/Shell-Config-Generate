@@ -1,6 +1,10 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - No longer use autodie for generate_file.
+    This is to cleanly support Perl 5.8.1
+    The exception thrown is now a string exception
+    instead of a autodie exception.
 
 0.21      2015-02-21 07:51:16 -0500
   - Skip PS1 tests on ActiveState build

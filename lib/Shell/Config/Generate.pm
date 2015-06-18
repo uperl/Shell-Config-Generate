@@ -628,10 +628,10 @@ an exception.
 sub generate_file
 {
   my($self, $shell, $filename) = @_;
-  use autodie;
-  open my $fh, '>', $filename;
-  print $fh $self->generate($shell);
-  close $fh;
+  my $fh;
+  open($fh, '>', $filename) or die "cannot open $filename: $!";
+  print $fh $self->generate($shell) or die "cannot write $filename: $!";
+  close $fh or die "error closing $filename: $!";
 }
 
 *import = \&Exporter::import;
