@@ -1,5 +1,6 @@
 use strict;
 use warnings;
+use 5.008001;
 use Shell::Config::Generate qw( win32_space_be_gone );
 use Test::More;
 use File::Temp qw( tempdir );

@@ -1,5 +1,6 @@
 use strict;
 use warnings;
+use 5.008001;
 use constant tests_per_shell => 2;
 use constant number_of_shells => 13;
 use Test::More tests => 5;

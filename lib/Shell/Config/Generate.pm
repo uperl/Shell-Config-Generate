@@ -2,6 +2,7 @@ package Shell::Config::Generate;
 
 use strict;
 use warnings;
+use 5.008001;
 use Shell::Guess;
 use Carp qw( croak );
 use Exporter ();

@@ -1,5 +1,6 @@
 use strict;
 use warnings;
+use 5.008001;
 use Test::More tests => 4;
 use Shell::Guess;
 use Shell::Config::Generate;

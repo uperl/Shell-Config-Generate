@@ -1,5 +1,6 @@
 use strict;
 use warnings;
+use 5.008001;
 use FindBin ();
 use File::Spec;
 use Test::More tests => 17;
