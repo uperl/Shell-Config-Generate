@@ -1,8 +1,15 @@
 language: perl
 
+addons:
+  apt:
+    packages:
+      - tcsh
+      - zsh
+      - ksh
+      - csh
+      - fish
+
 install:
-  - sudo apt-get install tcsh zsh ksh csh fish
-  - sudo chown -R `whoami` /usr/local
   - cpanm -n Dist::Zilla
   - dzil authordeps --missing | cpanm -n
   - cpanm -n Shell::Guess
@@ -21,3 +28,5 @@ perl:
   - "5.8"
 
 script: dzil test -v
+
+sudo: false
