@@ -10,6 +10,7 @@ addons:
       - fish
 
 install:
+  - bash .travis-install-system.sh
   - cpanm -n Dist::Zilla
   - dzil authordeps --missing | cpanm -n
   - cpanm -n Shell::Guess
@@ -30,3 +31,6 @@ perl:
 script: dzil test -v
 
 sudo: false
+
+env:
+  - PATH=$HOME/travislocal/bin:$PATH
