@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - Switch to ExtUtils::MakeMaker since we aren't using any
+    customizations in the installer
 
 0.22      2015-06-18 17:57:29 -0400
   - No longer use autodie for generate_file.
