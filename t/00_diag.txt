@@ -1,4 +1,3 @@
 ExtUtils::MakeMaker
 Shell::Guess
-Test::Differences
 Test::More

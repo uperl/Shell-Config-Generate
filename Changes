@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - Remove dependency on Test::Differences
 
 0.23      2015-08-06 16:16:59 -0400
   - Switch to ExtUtils::MakeMaker since we aren't using any

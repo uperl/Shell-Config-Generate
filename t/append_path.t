@@ -6,7 +6,6 @@ use constant number_of_shells => 13;
 use Test::More tests => 5;
 use Shell::Config::Generate;
 use FindBin ();
-use Test::Differences;
 
 require "$FindBin::Bin/common.pl";
 
@@ -51,8 +50,8 @@ foreach my $sep (undef, ':', ';', '|')
 
         my $env = get_env($config, $shell, $shell_path);
 
-        eq_or_diff [split /$path_sep_regex/, $env->{FOO_PATH1}], [qw( foo bar baz )], "[$shell] FOO_PATH1 = foo bar baz";
-        eq_or_diff [split /$path_sep_regex/, $env->{FOO_PATH2}], [qw( foo bar baz )], "[$shell] FOO_PATH2 = foo bar baz";
+        is_deeply [split /$path_sep_regex/, $env->{FOO_PATH1}], [qw( foo bar baz )], "[$shell] FOO_PATH1 = foo bar baz";
+        is_deeply [split /$path_sep_regex/, $env->{FOO_PATH2}], [qw( foo bar baz )], "[$shell] FOO_PATH2 = foo bar baz";
       }
     }
   }
