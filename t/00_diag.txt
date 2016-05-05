@@ -1,3 +1,0 @@
-ExtUtils::MakeMaker
-Shell::Guess
-Test::More
