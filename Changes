@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.25      2016-05-05 18:43:37 -0400
   - Add support for MSYS
 
 0.24      2015-08-20 12:32:24 -0400
