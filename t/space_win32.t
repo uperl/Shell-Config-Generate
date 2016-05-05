@@ -6,7 +6,7 @@ use Test::More;
 use File::Temp qw( tempdir );
 use File::Spec;
 
-plan skip_all => 'test only for cygwin and MSWin32' unless $^O =~ /^(cygwin|MSWin32)$/;
+plan skip_all => 'test only for cygwin and MSWin32' unless $^O =~ /^(cygwin|MSWin32|msys)$/;
 
 plan tests => 8;
 

@@ -36,7 +36,8 @@ sub shell_is_okay
 sub main::find_shell
 {
   my $shell = shift;
-  #return if $shell eq 'powershell.exe' && $^O eq 'cygwin';
+  return if $shell eq 'powershell.exe' && $^O eq 'cygwin';
+  return if $shell eq 'powershell.exe' && $^O eq 'msys';
   return $shell if $shell eq 'cmd.exe' && $^O eq 'MSWin32' && Win32::IsWinNT();
   return $shell if $shell eq 'command.com' && $^O eq 'MSWin32';
   foreach my $path (split $sep, $ENV{PATH})
@@ -124,7 +125,7 @@ sub main::get_env
     {
       my $perl_exe = $^X;
       $perl_exe = Cygwin::posix_to_win_path($perl_exe)
-        if $^O eq 'cygwin' && $fn =~ /\.(bat|cmd|ps1)$/;
+        if $^O =~ /^(cygwin|msys)$/ && $fn =~ /\.(bat|cmd|ps1)$/;
       print $fh "$perl_exe ", File::Spec->catfile($dir, 'dump.pl'), "\n";
       close $fn;
     }
@@ -151,7 +152,7 @@ sub main::get_env
   {
     #diag `cat $fn`;
     my $fn2 = $fn;
-    $fn2 = Cygwin::posix_to_win_path($fn) if $^O eq 'cygwin';
+    $fn2 = Cygwin::posix_to_win_path($fn) if $^O =~ /^(cygwin|msys)$/;
     $fn2 =~ s{\\}{/}g;
     $output = `$shell_path -ExecutionPolicy RemoteSigned -InputFormat none -NoProfile -File $fn2`;
   }

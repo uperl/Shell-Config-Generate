@@ -4,7 +4,7 @@ use 5.008001;
 use Shell::Config::Generate qw( win32_space_be_gone );
 use Test::More;
 
-plan skip_all => 'test only for NOT cygwin and MSWin32' if $^O =~ /^(cygwin|MSWin32)$/;
+plan skip_all => 'test only for NOT cygwin and MSWin32' if $^O =~ /^(cygwin|MSWin32|msys)$/;
 
 plan tests => 2;
 

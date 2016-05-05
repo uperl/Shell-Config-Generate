@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - Add support for MSYS
 
 0.24      2015-08-20 12:32:24 -0400
   - Remove dependency on Test::Differences

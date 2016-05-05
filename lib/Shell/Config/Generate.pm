@@ -663,12 +663,12 @@ Returns the same list passed into it
 
 =cut
 
-*_win_to_posix_path = $^O eq 'cygwin' ? \&Cygwin::win_to_posix_path : sub { $_[0] };
-*_posix_to_win_path = $^O eq 'cygwin' ? \&Cygwin::posix_to_win_path : sub { $_[0] };
+*_win_to_posix_path = $^O =~ /^(cygwin|msys)$/ ? \&Cygwin::win_to_posix_path : sub { $_[0] };
+*_posix_to_win_path = $^O =~ /^(cygwin|msys)$/ ? \&Cygwin::posix_to_win_path : sub { $_[0] };
 
 sub win32_space_be_gone
 {
-  return @_ if $^O !~ /^(MSWin32|cygwin)$/;
+  return @_ if $^O !~ /^(MSWin32|cygwin|msys)$/;
   map { /\s/ ? _win_to_posix_path(Win32::GetShortPathName(_posix_to_win_path($_))) : $_ } @_;
 }
 
