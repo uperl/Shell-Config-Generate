@@ -7,6 +7,7 @@ use File::Spec;
 use File::Temp qw( tempdir );
 use Test::More;
 use Shell::Guess;
+use Shell::Config::Generate qw( cmd_escape_path powershell_escape_path );
 
 my $sep = $^O eq 'MSWin32' ? ';' : ':';
 
@@ -126,6 +127,10 @@ sub main::get_env
       my $perl_exe = $^X;
       $perl_exe = Cygwin::posix_to_win_path($perl_exe)
         if $^O =~ /^(cygwin|msys)$/ && $fn =~ /\.(bat|cmd|ps1)$/;
+      ($perl_exe) = cmd_escape_path($perl_exe)
+        if $^O =~ /^(MSWin32|cygwin|msys)$/ && $fn =~ /\.(bat|cmd)$/;;
+      ($perl_exe) = powershell_escape_path($perl_exe)
+        if $^O =~ /^(MSWin32|cygwin|msys)$/ && $fn =~ /\.ps1$/;;
       print $fh "$perl_exe ", File::Spec->catfile($dir, 'dump.pl'), "\n";
       close $fn;
     }
@@ -150,7 +155,7 @@ sub main::get_env
   }
   elsif($shell->is_power)
   {
-    #diag `cat $fn`;
+    #diag `type $fn`;
     my $fn2 = $fn;
     $fn2 = Cygwin::posix_to_win_path($fn) if $^O =~ /^(cygwin|msys)$/;
     $fn2 =~ s{\\}{/}g;
@@ -179,7 +184,12 @@ sub main::get_env
   
   if($fail)
   {
-    diag "[src]\n" . `cat $fn`;
+    if ($^O =~ /^(MSWin32|msys)$/) {
+      diag "[src]\n" . `type $fn`;
+    }
+    else {
+      diag "[src]\n" . `cat $fn`;
+    }
     diag "[out]\n$output";
   }
   

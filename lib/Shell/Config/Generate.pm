@@ -347,7 +347,7 @@ sub _value_escape_win32
 {
   my $value = shift() . '';
   $value =~ s/%/%%/g;
-  $value =~ s/([&^|<>])/^$1/g;
+  $value =~ s/([&^|<>()])/^$1/g;
   $value =~ s/\n/^\n\n/g;
   $value;
 }
@@ -376,7 +376,7 @@ my %ps = ( # microsoft would have to be different
 sub _value_escape_powershell
 {
   my $value = shift() . '';
-  $value =~ s/(["'`\$#])/`$1/g;
+  $value =~ s/(["'`\$#()])/`$1/g;
   $value =~ s/([\0\a\b\f\r\n\t])/$ps{$1}/eg;
   $value;
 }
@@ -601,7 +601,7 @@ sub generate
       }
       elsif($shell->is_power)
       {
-        $buffer .= "function $args->[0] { $args->[1] \$args }\n";
+        $buffer .= sprintf("function %s { %s \$args }\n", $args->[0], _value_escape_powershell($args->[1]));
       }
       elsif($shell->is_fish)
       {
@@ -637,7 +637,7 @@ sub generate_file
 
 *import = \&Exporter::import;
 
-our @EXPORT_OK = qw( win32_space_be_gone );
+our @EXPORT_OK = qw( win32_space_be_gone cmd_escape_path powershell_escape_path );
 
 =head1 FUNCTIONS
 
@@ -650,6 +650,10 @@ return an equivalent list of paths pointing to the same
 file system objects without spaces.  To do this 
 C<Win32::GetShortPathName()> is used on to find alternative
 path names without spaces.
+
+NOTE that this breaks when Windows is told not to create
+short (C<8+3>) filenames; see L<http://www.perlmonks.org/?node_id=333930>
+for a discussion of this behaviour.
 
 In addition, on just C<Cygwin>:
 
@@ -670,6 +674,30 @@ sub win32_space_be_gone
 {
   return @_ if $^O !~ /^(MSWin32|cygwin|msys)$/;
   map { /\s/ ? _win_to_posix_path(Win32::GetShortPathName(_posix_to_win_path($_))) : $_ } @_;
+}
+
+=head2 cmd_escape_path( @path_list )
+
+Given a list of directory paths (or filenames), this will
+return an equivalent list of paths escaped for cmd.exe and command.com.
+
+=cut
+
+sub cmd_escape_path
+{
+  map { _value_escape_win32($_) } @_;
+}
+
+=head2 powershell_escape_path( @path_list )
+
+Given a list of directory paths (or filenames), this will
+return an equivalent list of paths escaped for PowerShell.
+
+=cut
+
+sub powershell_escape_path
+{
+  map { _value_escape_powershell($_) } @_;
 }
 
 1;
