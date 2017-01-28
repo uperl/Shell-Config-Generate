@@ -266,6 +266,10 @@ file system objects without spaces.  To do this
 `Win32::GetShortPathName()` is used on to find alternative
 path names without spaces.
 
+NOTE that this breaks when Windows is told not to create
+short (`8+3`) filenames; see [http://www.perlmonks.org/?node\_id=333930](http://www.perlmonks.org/?node_id=333930)
+for a discussion of this behaviour.
+
 In addition, on just `Cygwin`:
 
 The input paths are first converted from POSIX to Windows paths
@@ -275,6 +279,16 @@ POSIX paths using `Cygwin::win_to_posix_path`.
 Elsewhere:
 
 Returns the same list passed into it
+
+## cmd\_escape\_path( @path\_list )
+
+Given a list of directory paths (or filenames), this will
+return an equivalent list of paths escaped for cmd.exe and command.com.
+
+## powershell\_escape\_path( @path\_list )
+
+Given a list of directory paths (or filenames), this will
+return an equivalent list of paths escaped for PowerShell.
 
 # CAVEATS
 
