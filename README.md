@@ -344,7 +344,11 @@ Patches welcome for your favorite shell / operating system.
 
 # AUTHOR
 
-Graham Ollis <plicease@cpan.org>
+Author: Graham Ollis <plicease@cpan.org>
+
+Contributors:
+
+Brad Macpherson (BRAD, brad-mac)
 
 # COPYRIGHT AND LICENSE
 

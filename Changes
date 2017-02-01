@@ -1,6 +1,9 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - Improved escaping on windows (brad++)
+  - Added cmd_escape_path function (brad++)
+  - Added powershell_escape_path function (brad++)
 
 0.25      2016-05-05 18:43:37 -0400
   - Add support for MSYS
