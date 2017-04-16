@@ -23,6 +23,14 @@ sub shell_is_okay
     while(<ERR>) { note $_ }
     return $? >> 8 == 22;
   }
+  elsif($shell eq 'jsh' && -x $full_path)
+  {
+    require IPC::Open3;
+    my $pid = IPC::Open3::open3(\*IN, \*OUT, \*ERR, $full_path, '-c', 'true');
+    waitpid $pid, 0;
+    while(<ERR>) { note $_ }
+    return $? == 0;
+  }
   
   if($shell =~ /^powershell.exe$/ && -e $full_path)
   {
