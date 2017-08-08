@@ -130,7 +130,9 @@ or
 
 # CONSTRUCTOR
 
-## Shell::Config::Generate->new
+## new
+
+    my $config = Shell::Config::Generate->new;
 
 creates an instance of She::Config::Generate.
 
@@ -156,11 +158,15 @@ This may be useful for system administrators that must support
 users that use different shells, with a single configuration
 generation script written in Perl.
 
-## $config->set( $name => $value )
+## set
+
+    $config->set( $name => $value );
 
 Set an environment variable.
 
-## $config->set\_path( $name => @values )
+## set\_path
+
+    $config->set_path( $name => @values );
 
 Sets an environment variable which is stored in standard
 'path' format (Like PATH or PERL5LIB).  In UNIX land this 
@@ -172,19 +178,25 @@ you do so you have to determine the correct separator.
 This will replace the existing path value if it already
 exists.
 
-## $config->append\_path( $name => @values );
+## append\_path
+
+    $config->append_path( $name => @values );
 
 Appends to an environment variable which is stored in standard
 'path' format.  This will create a new environment variable if
 it doesn't already exist, or add to an existing value.
 
-## $config->prepend\_path( $name => @values );
+## prepend\_path
+
+    $config->prepend_path( $name => @values );
 
 Prepend to an environment variable which is stored in standard
 'path' format.  This will create a new environment variable if
 it doesn't already exist, or add to an existing value.
 
-## $config->comment( $comment )
+## comment
+
+    $config->comment( $comment );
 
 This will generate a comment in the appropriate format.
 
@@ -192,7 +204,10 @@ This will generate a comment in the appropriate format.
 it will not work with the `eval` backticks method for importing
 configurations into your shell.
 
-## $config->shebang( \[ $location \] )
+## shebang
+
+    $config->shebang;
+    $config->shebang($location);
 
 This will generate a shebang at the beginning of the configuration,
 making it appropriate for use as a script.  For non UNIX shells this
@@ -204,19 +219,25 @@ location for the shell will be used.
 it will not work with the `eval` backticks method for importing
 configurations into your shell.
 
-## $config->echo\_off
+## echo\_off
+
+    $config->echo_off;
 
 For DOS/Windows configurations (`command.com` or `cmd.exe`), issue this as the
 first line of the config:
 
     @echo off
 
-## $config->echo\_on
+## echo\_on
+
+    $config->echo_on;
 
 Turn off the echo off (that is do not put anything at the beginning of
 the config) for DOS/Windows configurations (`command.com` or `cmd.exe`).
 
-## $config->set\_alias( $alias => $command )
+## set\_alias
+
+    $config->set_alias( $alias => $command )
 
 Sets the given alias to the given command.
 
@@ -231,7 +252,9 @@ supports aliases.  On Windows, for PowerShell, a simple
 function is used instead of an alias so that arguments
 may be specified.
 
-## $config->set\_path\_sep( $sep )
+## set\_path\_sep
+
+    $config->set_path_sep( $sep );
 
 Use `$sep` as the path separator instead of the shell
 default path separator (generally `:` for Unix shells 
@@ -240,14 +263,19 @@ and `;` for Windows shells).
 Not all characters are supported, it is usually best
 to stick with the shell default or to use `:` or `;`.
 
-## $config->generate( \[ $shell \] )
+## generate
+
+    my $command_text = $config->generate;
+    my $command_text = $config->generate( $shell );
 
 Generate shell configuration code for the given shell.
 $shell is an instance of [Shell::Guess](https://metacpan.org/pod/Shell::Guess).  If $shell
 is not provided, then this method will use Shell::Guess
 to guess the shell that called your perl script.
 
-## $config->generate\_file( $shell, $filename )
+## generate\_file
+
+    $config->generate_file( $shell, $filename );
 
 Generate shell configuration code for the given shell
 and write it to the given file.  $shell is an instance 
@@ -256,7 +284,9 @@ an exception.
 
 # FUNCTIONS
 
-## win32\_space\_be\_gone( @path\_list )
+## win32\_space\_be\_gone
+
+    my @new_path_list = win32_space_be_gone( @orig_path_list );
 
 On `MSWin32` and `cygwin`:
 
@@ -280,12 +310,16 @@ Elsewhere:
 
 Returns the same list passed into it
 
-## cmd\_escape\_path( @path\_list )
+## cmd\_escape\_path
+
+    my @new_path_list = cmd_escape_path( @orig_path_list )
 
 Given a list of directory paths (or filenames), this will
 return an equivalent list of paths escaped for cmd.exe and command.com.
 
-## powershell\_escape\_path( @path\_list )
+## powershell\_escape\_path
+
+    my @new_path_list = powershell_escape_path( @orig_path_list )
 
 Given a list of directory paths (or filenames), this will
 return an equivalent list of paths escaped for PowerShell.

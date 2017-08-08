@@ -138,7 +138,9 @@ or
 
 =head1 CONSTRUCTOR
 
-=head2 Shell::Config::Generate->new
+=head2 new
+
+ my $config = Shell::Config::Generate->new;
 
 creates an instance of She::Config::Generate.
 
@@ -176,7 +178,9 @@ This may be useful for system administrators that must support
 users that use different shells, with a single configuration
 generation script written in Perl.
 
-=head2 $config-E<gt>set( $name => $value )
+=head2 set
+
+ $config->set( $name => $value );
 
 Set an environment variable.
 
@@ -191,7 +195,9 @@ sub set
   $self;
 }
 
-=head2 $config-E<gt>set_path( $name => @values )
+=head2 set_path
+
+ $config->set_path( $name => @values );
 
 Sets an environment variable which is stored in standard
 'path' format (Like PATH or PERL5LIB).  In UNIX land this 
@@ -214,7 +220,9 @@ sub set_path
   $self;
 }
 
-=head2 $config-E<gt>append_path( $name => @values );
+=head2 append_path
+
+ $config->append_path( $name => @values );
 
 Appends to an environment variable which is stored in standard
 'path' format.  This will create a new environment variable if
@@ -232,7 +240,9 @@ sub append_path
   $self;
 }
 
-=head2 $config-E<gt>prepend_path( $name => @values );
+=head2 prepend_path
+
+ $config->prepend_path( $name => @values );
 
 Prepend to an environment variable which is stored in standard
 'path' format.  This will create a new environment variable if
@@ -250,7 +260,9 @@ sub prepend_path
   $self;
 }
 
-=head2 $config-E<gt>comment( $comment )
+=head2 comment
+
+ $config->comment( $comment );
 
 This will generate a comment in the appropriate format.
 
@@ -269,7 +281,10 @@ sub comment
   $self;
 }
 
-=head2 $config-E<gt>shebang( [ $location ] )
+=head2 shebang
+
+ $config->shebang;
+ $config->shebang($location);
 
 This will generate a shebang at the beginning of the configuration,
 making it appropriate for use as a script.  For non UNIX shells this
@@ -290,7 +305,9 @@ sub shebang
   $self;
 }
 
-=head2 $config-E<gt>echo_off
+=head2 echo_off
+
+ $config->echo_off;
 
 For DOS/Windows configurations (C<command.com> or C<cmd.exe>), issue this as the
 first line of the config:
@@ -306,7 +323,9 @@ sub echo_off
   $self;
 }
 
-=head2 $config-E<gt>echo_on
+=head2 echo_on
+
+ $config->echo_on;
 
 Turn off the echo off (that is do not put anything at the beginning of
 the config) for DOS/Windows configurations (C<command.com> or C<cmd.exe>).
@@ -381,7 +400,9 @@ sub _value_escape_powershell
   $value;
 }
 
-=head2 $config-E<gt>set_alias( $alias => $command )
+=head2 set_alias
+
+ $config->set_alias( $alias => $command )
 
 Sets the given alias to the given command.
 
@@ -405,7 +426,9 @@ sub set_alias
   push @{ $self->{commands} }, ['alias', $alias, $command]; 
 }
 
-=head2 $config-E<gt>set_path_sep( $sep )
+=head2 set_path_sep
+
+ $config->set_path_sep( $sep );
 
 Use C<$sep> as the path separator instead of the shell
 default path separator (generally C<:> for Unix shells 
@@ -422,7 +445,10 @@ sub set_path_sep
   push @{ $self->{commands} }, ['set_path_sep', $sep];
 }
 
-=head2 $config-E<gt>generate( [ $shell ] )
+=head2 generate
+
+ my $command_text = $config->generate;
+ my $command_text = $config->generate( $shell );
 
 Generate shell configuration code for the given shell.
 $shell is an instance of L<Shell::Guess>.  If $shell
@@ -617,7 +643,9 @@ sub generate
   $buffer;
 }
 
-=head2 $config-E<gt>generate_file( $shell, $filename )
+=head2 generate_file
+
+ $config->generate_file( $shell, $filename );
 
 Generate shell configuration code for the given shell
 and write it to the given file.  $shell is an instance 
@@ -641,7 +669,9 @@ our @EXPORT_OK = qw( win32_space_be_gone cmd_escape_path powershell_escape_path 
 
 =head1 FUNCTIONS
 
-=head2 win32_space_be_gone( @path_list )
+=head2 win32_space_be_gone
+
+ my @new_path_list = win32_space_be_gone( @orig_path_list );
 
 On C<MSWin32> and C<cygwin>:
 
@@ -676,7 +706,9 @@ sub win32_space_be_gone
   map { /\s/ ? _win_to_posix_path(Win32::GetShortPathName(_posix_to_win_path($_))) : $_ } @_;
 }
 
-=head2 cmd_escape_path( @path_list )
+=head2 cmd_escape_path
+
+ my @new_path_list = cmd_escape_path( @orig_path_list )
 
 Given a list of directory paths (or filenames), this will
 return an equivalent list of paths escaped for cmd.exe and command.com.
@@ -688,7 +720,9 @@ sub cmd_escape_path
   map { _value_escape_win32($_) } @_;
 }
 
-=head2 powershell_escape_path( @path_list )
+=head2 powershell_escape_path
+
+ my @new_path_list = powershell_escape_path( @orig_path_list )
 
 Given a list of directory paths (or filenames), this will
 return an equivalent list of paths escaped for PowerShell.
