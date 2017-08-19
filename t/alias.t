@@ -26,7 +26,14 @@ do {
 };
 
 eval { $config->set_alias("myecho1", "$^X $script_name f00f") };
+eval { $config->set_alias("myecho2", [ $^X, $script_name, "f00f" ]) };
 is $@, '', 'set_alias';
+
+sub test_echo {
+  my ($config, $shell, $shell_path, $command) = @_;
+  my $list = get_env($config, $shell, $shell_path, "$command one two three");
+  is_deeply $list, [ qw( f00f one two three )], 'arguments match';
+}
 
 foreach my $shell (qw( tcsh csh bsd-csh bash sh zsh cmd.exe command.com ksh 44bsd-csh jsh powershell.exe fish ))
 {
@@ -41,8 +48,8 @@ foreach my $shell (qw( tcsh csh bsd-csh bash sh zsh cmd.exe command.com ksh 44bs
       if $shell eq 'cmd.exe' || $shell eq 'command.com';
     plan skip_all => "skipping powershell on msys"
       if $shell eq 'powershell.exe' && $^O =~ /^(msys)$/;
-    my $list = get_env($config, $shell, $shell_path, 'myecho1 one two three');
-    is_deeply $list, [ qw( f00f one two three )], 'arguments match';
+    test_echo($config, $shell, $shell_path, 'myecho1') if $^X !~ / /;
+    test_echo($config, $shell, $shell_path, 'myecho2');
   };
 }
 
@@ -54,12 +61,14 @@ subtest 'powershell.exe' => sub {
   if($^O eq 'cygwin')
   {
     $config = Shell::Config::Generate->new;
-    $config->set_alias("myecho1", sprintf("%s %s f00f", map { Cygwin::posix_to_win_path($_) } $^X, $script_name ));
+    my @words = ((map { Cygwin::posix_to_win_path($_) } $^X, $script_name), "f00f");
+    $config->set_alias("myecho1", join ' ', @words);
+    $config->set_alias("myecho2", \@words);
   }
   
   note $config->generate($guess);
   plan skip_all => "no powershell.exe found" unless defined $shell_path;
   
-  my $list = get_env($config, $shell, $shell_path, 'myecho1 one two three');
-  is_deeply $list, [ qw( f00f one two three )], 'arguments match';  
+  test_echo($config, $shell, $shell_path, 'myecho1') if $^X !~ / /;
+  test_echo($config, $shell, $shell_path, 'myecho2');
 };

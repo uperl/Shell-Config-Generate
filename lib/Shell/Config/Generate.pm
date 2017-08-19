@@ -366,7 +366,7 @@ sub _value_escape_win32
 {
   my $value = shift() . '';
   $value =~ s/%/%%/g;
-  $value =~ s/([&^|<>()])/^$1/g;
+  $value =~ s/([&^|<>])/^$1/g;
   $value =~ s/\n/^\n\n/g;
   $value;
 }
@@ -404,7 +404,9 @@ sub _value_escape_powershell
 
  $config->set_alias( $alias => $command )
 
-Sets the given alias to the given command.
+Sets the given alias to the given command. If C<$command> is an array-ref,
+it will be treated as a list of words each to be quoted appropriately
+for that shell.
 
 Caveat:
 some older shells do not support aliases, such as
@@ -613,25 +615,28 @@ sub generate
     
     elsif($command eq 'alias')
     {
+      my @words = (ref($args->[1]) eq 'ARRAY') ? @{$args->[1]} : $args->[1];
       if($shell->is_bourne)
       {
-        $buffer .= "alias $args->[0]=\"$args->[1]\";\n";
+        $buffer .= "alias $args->[0]=\"@words\";\n";
       }
       elsif($shell->is_c)
       {
-        $buffer .= "alias $args->[0] $args->[1];\n";
+        $buffer .= "alias $args->[0] @words;\n";
       }
       elsif($shell->is_cmd || $shell->is_command)
       {
-        $buffer .= "DOSKEY $args->[0]=$args->[1] \$*\n";
+        $buffer .= "DOSKEY $args->[0]=@words \$*\n";
       }
       elsif($shell->is_power)
       {
-        $buffer .= sprintf("function %s { %s \$args }\n", $args->[0], _value_escape_powershell($args->[1]));
+        # this leaves spaces between words, but words with spaces in get quoted
+        my $body = (@words > 1) ? join(' ', map powershell_escape_path($_), @words) : $words[0];
+        $buffer .= sprintf("function %s { %s \$args }\n", $args->[0], $body);
       }
       elsif($shell->is_fish)
       {
-        $buffer .= "alias $args->[0] '$args->[1]';\n";
+        $buffer .= "alias $args->[0] '@words';\n";
       }
       else
       {
@@ -717,7 +722,7 @@ return an equivalent list of paths escaped for cmd.exe and command.com.
 
 sub cmd_escape_path
 {
-  map { _value_escape_win32($_) } @_;
+  map { '"' . _value_escape_win32($_) . '"' } @_;
 }
 
 =head2 powershell_escape_path
@@ -731,7 +736,7 @@ return an equivalent list of paths escaped for PowerShell.
 
 sub powershell_escape_path
 {
-  map { _value_escape_powershell($_) } @_;
+  map { my $p = _value_escape_powershell($_); $p =~ s/ /` /g; $p } @_;
 }
 
 1;

@@ -94,6 +94,19 @@ sub get_guess
   Shell::Guess->$method;
 }
 
+sub main::get_perl_exe
+{
+  my ($shell) = @_;
+  my $perl_exe = $^X;
+  $perl_exe = Cygwin::posix_to_win_path($perl_exe)
+    if $^O =~ /^(cygwin|msys)$/ && ($shell->is_command || $shell->is_cmd || $shell->is_power);
+  ($perl_exe) = cmd_escape_path($perl_exe)
+    if $^O =~ /^(MSWin32|cygwin|msys)$/ && ($shell->is_command || $shell->is_cmd);
+  ($perl_exe) = powershell_escape_path($perl_exe)
+    if $^O =~ /^(MSWin32|cygwin|msys)$/ && $shell->is_power;
+  return $perl_exe;
+}
+
 sub main::get_env
 {
   my $config = shift;
@@ -124,13 +137,7 @@ sub main::get_env
     }
     else
     {
-      my $perl_exe = $^X;
-      $perl_exe = Cygwin::posix_to_win_path($perl_exe)
-        if $^O =~ /^(cygwin|msys)$/ && $fn =~ /\.(bat|cmd|ps1)$/;
-      ($perl_exe) = cmd_escape_path($perl_exe)
-        if $^O =~ /^(MSWin32|cygwin|msys)$/ && $fn =~ /\.(bat|cmd)$/;;
-      ($perl_exe) = powershell_escape_path($perl_exe)
-        if $^O =~ /^(MSWin32|cygwin|msys)$/ && $fn =~ /\.ps1$/;;
+      my $perl_exe = main::get_perl_exe($shell);
       print $fh "$perl_exe ", File::Spec->catfile($dir, 'dump.pl'), "\n";
       close $fn;
     }
