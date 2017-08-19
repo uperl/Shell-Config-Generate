@@ -717,7 +717,7 @@ return an equivalent list of paths escaped for cmd.exe and command.com.
 
 sub cmd_escape_path
 {
-  map { _value_escape_win32($_) } @_;
+  map { '"' . _value_escape_win32($_) . '"' } @_;
 }
 
 =head2 powershell_escape_path
