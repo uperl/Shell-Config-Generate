@@ -731,7 +731,7 @@ return an equivalent list of paths escaped for PowerShell.
 
 sub powershell_escape_path
 {
-  map { _value_escape_powershell($_) } @_;
+  map { my $p = _value_escape_powershell($_); $p =~ s/ /` /g; $p } @_;
 }
 
 1;
