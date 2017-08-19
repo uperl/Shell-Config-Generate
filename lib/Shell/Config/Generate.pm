@@ -366,7 +366,7 @@ sub _value_escape_win32
 {
   my $value = shift() . '';
   $value =~ s/%/%%/g;
-  $value =~ s/([&^|<>()])/^$1/g;
+  $value =~ s/([&^|<>])/^$1/g;
   $value =~ s/\n/^\n\n/g;
   $value;
 }
