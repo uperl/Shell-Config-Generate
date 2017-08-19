@@ -404,7 +404,9 @@ sub _value_escape_powershell
 
  $config->set_alias( $alias => $command )
 
-Sets the given alias to the given command.
+Sets the given alias to the given command. If C<$command> is an array-ref,
+it will be treated as a list of words each to be quoted appropriately
+for that shell.
 
 Caveat:
 some older shells do not support aliases, such as
@@ -613,25 +615,28 @@ sub generate
     
     elsif($command eq 'alias')
     {
+      my @words = (ref($args->[1]) eq 'ARRAY') ? @{$args->[1]} : $args->[1];
       if($shell->is_bourne)
       {
-        $buffer .= "alias $args->[0]=\"$args->[1]\";\n";
+        $buffer .= "alias $args->[0]=\"@words\";\n";
       }
       elsif($shell->is_c)
       {
-        $buffer .= "alias $args->[0] $args->[1];\n";
+        $buffer .= "alias $args->[0] @words;\n";
       }
       elsif($shell->is_cmd || $shell->is_command)
       {
-        $buffer .= "DOSKEY $args->[0]=$args->[1] \$*\n";
+        $buffer .= "DOSKEY $args->[0]=@words \$*\n";
       }
       elsif($shell->is_power)
       {
-        $buffer .= sprintf("function %s { %s \$args }\n", $args->[0], _value_escape_powershell($args->[1]));
+        # this leaves spaces between words, but words with spaces in get quoted
+        my $body = join ' ', map powershell_escape_path($_), @words;
+        $buffer .= sprintf("function %s { %s \$args }\n", $args->[0], $body);
       }
       elsif($shell->is_fish)
       {
-        $buffer .= "alias $args->[0] '$args->[1]';\n";
+        $buffer .= "alias $args->[0] '@words';\n";
       }
       else
       {

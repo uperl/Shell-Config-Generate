@@ -25,7 +25,7 @@ do {
   close $fh;
 };
 
-eval { $config->set_alias("myecho1", "$^X $script_name f00f") };
+eval { $config->set_alias("myecho1", [ $^X, $script_name, "f00f" ]) };
 is $@, '', 'set_alias';
 
 foreach my $shell (qw( tcsh csh bsd-csh bash sh zsh cmd.exe command.com ksh 44bsd-csh jsh powershell.exe fish ))
