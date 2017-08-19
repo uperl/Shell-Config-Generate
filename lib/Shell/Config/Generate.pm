@@ -631,7 +631,7 @@ sub generate
       elsif($shell->is_power)
       {
         # this leaves spaces between words, but words with spaces in get quoted
-        my $body = join ' ', map powershell_escape_path($_), @words;
+        my $body = (@words > 1) ? join(' ', map powershell_escape_path($_), @words) : $words[0];
         $buffer .= sprintf("function %s { %s \$args }\n", $args->[0], $body);
       }
       elsif($shell->is_fish)

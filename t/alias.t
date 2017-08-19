@@ -61,11 +61,14 @@ subtest 'powershell.exe' => sub {
   if($^O eq 'cygwin')
   {
     $config = Shell::Config::Generate->new;
-    $config->set_alias("myecho1", sprintf("%s %s f00f", map { Cygwin::posix_to_win_path($_) } $^X, $script_name ));
+    my @words = ((map { Cygwin::posix_to_win_path($_) } $^X, $script_name), "f00f");
+    $config->set_alias("myecho1", join ' ', @words);
+    $config->set_alias("myecho2", \@words);
   }
   
   note $config->generate($guess);
   plan skip_all => "no powershell.exe found" unless defined $shell_path;
   
-  test_echo($config, $shell, $shell_path, 'myecho1');
+  test_echo($config, $shell, $shell_path, 'myecho1') if $^X !~ / /;
+  test_echo($config, $shell, $shell_path, 'myecho2');
 };
