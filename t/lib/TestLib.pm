@@ -10,7 +10,7 @@ use Test2::API qw( context );
 use Env qw( @PATH );
 use base qw( Exporter );
 
-our @EXPORT = qw( find_shell tempdir get_env bsd_fish );
+our @EXPORT = qw( find_shell tempdir get_env bad_fish );
 
 sub shell_is_okay
 {
