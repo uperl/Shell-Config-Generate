@@ -10,15 +10,15 @@ addons:
       - fish
 
 install:
-  - bash .travis-install-system.sh
+  - bash maint/travis-install-system.sh
   - cpanm -n Dist::Zilla
   - dzil authordeps --missing | cpanm -n
-  - cpanm -n Shell::Guess
-  - cpanm -n Test::CPAN::Changes Test::EOL Test::Fixme Test::NoTabs Test::Pod::Spelling::CommonMistakes Test::Spelling Test::Strict Test::Version || true
+  - dzil listdeps --missing | cpanm -n
 
 script: HARNESS_IS_VERBOSE=1 prove -lvr t xt
 
 perl:
+  - "5.26"
   - "5.24"
   - "5.22"
   - "5.20"
