@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.27_01   2017-08-20 05:28:25 -0400
   - Works on Windows with a Perl installed in a directory with whitespace
   - Works on Windows when installed from a directory with whitespace
 
