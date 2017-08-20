@@ -8,8 +8,6 @@ use File::Spec;
 
 plan skip_all => 'test only for cygwin and MSWin32' unless $^O =~ /^(cygwin|MSWin32|msys)$/;
 
-plan tests => 8;
-
 ok(Shell::Config::Generate->can('win32_space_be_gone'), 'has win32_space_be_gone function');
 
 my $tmp = tempdir( CLEANUP => 1 );
@@ -43,3 +41,5 @@ my $content = do {
 };
 
 like $content, qr{hi there}, "has content";
+
+done_testing;

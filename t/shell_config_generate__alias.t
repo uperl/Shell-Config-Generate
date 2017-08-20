@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use 5.008001;
 use File::Spec;
-use Test::More tests => 17;
+use Test::More;
 use Shell::Guess;
 use Shell::Config::Generate;
 use TestLib;
@@ -66,3 +66,5 @@ subtest 'powershell.exe' => sub {
   my $list = get_env($config, $shell, $shell_path, 'myecho1 one two three');
   is_deeply $list, [ qw( f00f one two three )], 'arguments match';  
 };
+
+done_testing;

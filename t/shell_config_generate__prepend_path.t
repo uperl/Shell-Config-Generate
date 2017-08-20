@@ -4,8 +4,7 @@ use warnings;
 use 5.008001;
 use constant tests_per_shell => 2;
 use constant number_of_shells => 13;
-#use Test::More tests => (tests_per_shell * number_of_shells) + 3;
-use Test::More tests => 5;
+use Test::More;
 use Shell::Config::Generate;
 use TestLib;
 
@@ -14,7 +13,6 @@ tempdir();
 foreach my $sep (undef, ':', ';', '|')
 {
   subtest "sep = " . ($sep||'undef') => sub {
-    plan tests => (tests_per_shell * number_of_shells) + 3;
 
     my $config = eval { Shell::Config::Generate->new };
   
@@ -57,3 +55,4 @@ foreach my $sep (undef, ':', ';', '|')
   }
 }
 
+done_testing;

@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 use 5.008001;
-use Test::More tests => 4;
+use Test::More;
 use Shell::Guess;
 use Shell::Config::Generate;
 
@@ -16,3 +16,5 @@ diag $@ if $@;
 
 is eval { Shell::Config::Generate->new->shebang->generate(Shell::Guess->c_shell) }, "#!/bin/csh\n", "shebang = #!/bin/csh";
 diag $@ if $@;
+
+done_testing;
