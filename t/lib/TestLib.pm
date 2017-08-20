@@ -52,6 +52,7 @@ sub find_shell
 }
 
 my $dir = File::Temp::tempdir( CLEANUP => 1 );
+$dir = Win32::GetShortPathName($dir) if $^O eq 'MSWin32';
 
 do {
   my $fn = File::Spec->catfile($dir, 'dump.pl');
