@@ -1,3 +1,4 @@
+use lib 't/lib';
 use strict;
 use warnings;
 use 5.008001;
@@ -5,9 +6,7 @@ use constant tests_per_shell => 1;
 use constant number_of_shells => 13;
 use Test::More tests => (tests_per_shell * number_of_shells) + 3;
 use Shell::Config::Generate;
-use FindBin ();
-
-require "$FindBin::Bin/common.pl";
+use TestLib;
 
 tempdir();
 

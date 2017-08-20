@@ -1,15 +1,16 @@
-package
-  TestLib;
+package TestLib;
 
 use strict;
 use warnings;
 use File::Spec;
-use File::Temp qw( tempdir );
-use Test::More;
+use File::Temp;
 use Shell::Guess;
 use Shell::Config::Generate qw( cmd_escape_path powershell_escape_path );
+use Test2::API qw( context );
+use Env qw( @PATH );
+use base qw( Exporter );
 
-my $sep = $^O eq 'MSWin32' ? ';' : ':';
+our @EXPORT = qw( find_shell tempdir get_env bsd_fish );
 
 sub shell_is_okay
 {
@@ -27,21 +28,21 @@ sub shell_is_okay
   if($shell =~ /^powershell.exe$/ && -e $full_path)
   {
     return 0 if $ENV{ACTIVESTATE_PPM_BUILD};
-    `$full_path -ExecutionPolicy RemoteSigned -InputFormat none -NoProfile -File t\\true.ps1`;
+    `$full_path -ExecutionPolicy RemoteSigned -InputFormat none -NoProfile -File corpus\\true.ps1`;
     return $? == 0;
   }
 
   return 1 if -x $full_path;
 }
 
-sub main::find_shell
+sub find_shell
 {
   my $shell = shift;
   return if $shell eq 'powershell.exe' && $^O eq 'cygwin';
   return if $shell eq 'powershell.exe' && $^O eq 'msys';
   return $shell if $shell eq 'cmd.exe' && $^O eq 'MSWin32' && Win32::IsWinNT();
   return $shell if $shell eq 'command.com' && $^O eq 'MSWin32';
-  foreach my $path (split $sep, $ENV{PATH})
+  foreach my $path (@PATH)
   {
     my $full = File::Spec->catfile($path, $shell);
     return $full if shell_is_okay($shell, $full);
@@ -50,7 +51,7 @@ sub main::find_shell
   return;
 }
 
-my $dir = tempdir( CLEANUP => 1 );
+my $dir = File::Temp::tempdir( CLEANUP => 1 );
 
 do {
   my $fn = File::Spec->catfile($dir, 'dump.pl');
@@ -63,12 +64,14 @@ do {
     print Dumper(\%data);
   };
   close $fh;
-  #diag `cat $fn`;
 };
 
-sub main::tempdir
+sub tempdir
 {
-  ok -d $dir, "tempdir = $dir";
+  my $ctx = context();
+  $ctx->ok(-d $dir, 'temp directory');
+  $ctx->note("temp directory = $dir");
+  $ctx->release;
   $dir;
 }
 
@@ -94,11 +97,13 @@ sub get_guess
   Shell::Guess->$method;
 }
 
-sub main::get_env
+sub get_env
 {
   my $config = shift;
   my $shell = get_guess(shift);
   my $shell_path = shift;
+
+  my $ctx = context();
   
   my $fn = 'foo';
   $fn .= ".bat" if $shell->is_command;
@@ -117,7 +122,7 @@ sub main::get_env
     print $fh "\@echo off\n" if $shell->is_command || $shell->is_cmd;
     print $fh "shopt -s expand_aliases\n" if $shell_path =~  /bash(.exe)?$/;
     eval { print $fh $config->generate($shell) };
-    diag $@ if $@;
+    $ctx->diag($@) if $@;
     if(@_)
     {
       print $fh "$_\n" for @_;
@@ -143,7 +148,6 @@ sub main::get_env
   my $output;
   if($shell->is_unix)
   {
-    #diag `cat $fn`;
     if($shell->is_c)
     {
       $output = `$shell_path -f $fn`;
@@ -155,7 +159,6 @@ sub main::get_env
   }
   elsif($shell->is_power)
   {
-    #diag `type $fn`;
     my $fn2 = $fn;
     $fn2 = Cygwin::posix_to_win_path($fn) if $^O =~ /^(cygwin|msys)$/;
     $fn2 =~ s{\\}{/}g;
@@ -169,36 +172,38 @@ sub main::get_env
   my $fail = 0;  
   if ($? == -1)
   {
-    diag "failed to execute: $!\n";
+    $ctx->diag("failed to execute: $!\n");
     $fail = 1;
   }
   elsif ($? & 127) {
-    diag "child died with signal ", $? & 127;
+    $ctx->diag("child died with signal ", $? & 127);
     $fail = 1;
   }
   elsif($? >> 8)
   {
-    diag "child exited with value ", $? >> 8;
+    $ctx->diag("child exited with value ", $? >> 8);
     $fail = 1;
   }
   
   if($fail)
   {
     if ($^O =~ /^(MSWin32|msys)$/) {
-      diag "[src]\n" . `type $fn`;
+      $ctx->diag("[src]\n" . `type $fn`);
     }
     else {
-      diag "[src]\n" . `cat $fn`;
+      $ctx->diag("[src]\n" . `cat $fn`);
     }
-    diag "[out]\n$output";
+    $ctx->diag("[out]\n$output");
   }
   
   eval $output;
+
+  $ctx->release;
   
   return $VAR1;
 }
 
-sub main::bad_fish
+sub bad_fish
 {
   my $path = shift;
   my $dir = File::Spec->catdir(tempdir( CLEANUP => 1 ), qw( one two three ));
@@ -208,7 +213,6 @@ sub main::bad_fish
   waitpid $pid, $?;
   
   my $str = do { local $/; <ERR> };
-  #diag "str = \"$str\"";
   
   $? != 0;
 }

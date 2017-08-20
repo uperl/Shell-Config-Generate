@@ -1,13 +1,13 @@
+use lib 't/lib';
 use strict;
 use warnings;
 use 5.008001;
-use FindBin ();
 use File::Spec;
 use Test::More tests => 17;
 use Shell::Guess;
 use Shell::Config::Generate;
+use TestLib;
 
-require "$FindBin::Bin/common.pl";
 my $dir = tempdir();
 
 my $config = eval { Shell::Config::Generate->new };  
