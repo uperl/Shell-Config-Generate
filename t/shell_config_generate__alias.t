@@ -10,6 +10,9 @@ use TestLib;
 
 my $dir = tempdir();
 
+my $perl_exe = $^X;
+$perl_exe = Win32::GetShortPathName($perl_exe) if $^O eq 'MSWin32';
+
 my $config = eval { Shell::Config::Generate->new };  
 isa_ok $config, 'Shell::Config::Generate';
 
@@ -25,7 +28,7 @@ do {
   close $fh;
 };
 
-eval { $config->set_alias("myecho1", "$^X $script_name f00f") };
+eval { $config->set_alias("myecho1", "$perl_exe $script_name f00f") };
 is $@, '', 'set_alias';
 
 foreach my $shell (qw( tcsh csh bsd-csh bash sh zsh cmd.exe command.com ksh 44bsd-csh jsh powershell.exe fish ))
@@ -54,7 +57,7 @@ subtest 'powershell.exe' => sub {
   if($^O eq 'cygwin')
   {
     $config = Shell::Config::Generate->new;
-    $config->set_alias("myecho1", sprintf("%s %s f00f", map { Cygwin::posix_to_win_path($_) } $^X, $script_name ));
+    $config->set_alias("myecho1", sprintf("%s %s f00f", map { Cygwin::posix_to_win_path($_) } $perl_exe, $script_name ));
   }
   
   note $config->generate($guess);
