@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.27_02   2017-08-21 16:55:18 -0400
   - Fix testing bug introduced in 0.27_01
 
 0.27_01   2017-08-20 05:28:25 -0400
