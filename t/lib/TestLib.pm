@@ -21,7 +21,11 @@ sub shell_is_okay
     require IPC::Open3;
     my $pid = IPC::Open3::open3(\*IN, \*OUT, \*ERR, $full_path, '-c' => 'exit 22');
     waitpid $pid, 0;
-    while(<ERR>) { note $_ }
+    my $ctx = context();
+    while(<ERR>) {
+      $ctx->note($_);
+    }
+    $ctx->release;
     return $? >> 8 == 22;
   }
   
