@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - Filter PATH on Windows Subsystem for Linux
 
 0.28      2017-08-22 20:26:12 -0400
   - Production release identical to 0.27_02
