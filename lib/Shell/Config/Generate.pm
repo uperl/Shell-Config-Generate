@@ -455,7 +455,6 @@ C<$shell> is an instance of L<Shell::Guess>.  If C<$shell>
 is not provided, then this method will use Shell::Guess
 to guess the shell that called your perl script.
 
-
 =cut
 
 sub generate
