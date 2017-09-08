@@ -288,7 +288,7 @@ sub comment
 
 This will generate a shebang at the beginning of the configuration,
 making it appropriate for use as a script.  For non UNIX shells this
-will be ignored.  If specified, $location will be used as the 
+will be ignored.  If specified, C<$location> will be used as the 
 interpreter location.  If it is not specified, then the default
 location for the shell will be used.
 
@@ -451,9 +451,10 @@ sub set_path_sep
  my $command_text = $config->generate( $shell );
 
 Generate shell configuration code for the given shell.
-$shell is an instance of L<Shell::Guess>.  If $shell
+C<$shell> is an instance of L<Shell::Guess>.  If C<$shell>
 is not provided, then this method will use Shell::Guess
 to guess the shell that called your perl script.
+
 
 =cut
 
@@ -648,7 +649,7 @@ sub generate
  $config->generate_file( $shell, $filename );
 
 Generate shell configuration code for the given shell
-and write it to the given file.  $shell is an instance 
+and write it to the given file.  C<$shell> is an instance 
 of L<Shell::Guess>.  If there is an IO error it will throw
 an exception.
 

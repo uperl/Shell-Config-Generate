@@ -211,7 +211,7 @@ configurations into your shell.
 
 This will generate a shebang at the beginning of the configuration,
 making it appropriate for use as a script.  For non UNIX shells this
-will be ignored.  If specified, $location will be used as the 
+will be ignored.  If specified, `$location` will be used as the 
 interpreter location.  If it is not specified, then the default
 location for the shell will be used.
 
@@ -269,7 +269,7 @@ to stick with the shell default or to use `:` or `;`.
     my $command_text = $config->generate( $shell );
 
 Generate shell configuration code for the given shell.
-$shell is an instance of [Shell::Guess](https://metacpan.org/pod/Shell::Guess).  If $shell
+`$shell` is an instance of [Shell::Guess](https://metacpan.org/pod/Shell::Guess).  If `$shell`
 is not provided, then this method will use Shell::Guess
 to guess the shell that called your perl script.
 
@@ -278,7 +278,7 @@ to guess the shell that called your perl script.
     $config->generate_file( $shell, $filename );
 
 Generate shell configuration code for the given shell
-and write it to the given file.  $shell is an instance 
+and write it to the given file.  `$shell` is an instance 
 of [Shell::Guess](https://metacpan.org/pod/Shell::Guess).  If there is an IO error it will throw
 an exception.
 
