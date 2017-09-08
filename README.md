@@ -273,6 +273,12 @@ Generate shell configuration code for the given shell.
 is not provided, then this method will use Shell::Guess
 to guess the shell that called your perl script.
 
+You can also pass in the shell name as a string for
+`$shell`.  This should correspond to the appropriate
+_name_\_shell from [Shell::Guess](https://metacpan.org/pod/Shell::Guess).  So for csh you
+would pass in `"c"` and for tcsh you would pass in
+`"tc"`, etc.
+
 ## generate\_file
 
     $config->generate_file( $shell, $filename );

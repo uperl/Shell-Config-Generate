@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - You can now pass a string name of the shell
+    to generate and generate_file
 
 0.29      2017-09-01 09:38:58 -0400
   - Filter PATH on Windows Subsystem for Linux

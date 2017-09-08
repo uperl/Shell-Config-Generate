@@ -455,13 +455,44 @@ C<$shell> is an instance of L<Shell::Guess>.  If C<$shell>
 is not provided, then this method will use Shell::Guess
 to guess the shell that called your perl script.
 
+You can also pass in the shell name as a string for
+C<$shell>.  This should correspond to the appropriate
+I<name>_shell from L<Shell::Guess>.  So for csh you
+would pass in C<"c"> and for tcsh you would pass in
+C<"tc">, etc.
+
 =cut
 
 sub generate
 {
   my($self, $shell) = @_;
 
-  $shell ||= Shell::Guess->running_shell;
+  if(defined $shell)
+  {
+    if(ref($shell) eq '')
+    {
+      my $method = join '_', $shell, 'shell';
+      if(Shell::Guess->can($method))
+      {
+        $shell = Shell::Guess->$method;
+      }
+      else
+      {
+        croak("unknown shell type: $shell");
+      }
+    }
+  }
+  else
+  {
+    $shell = Shell::Guess->running_shell;
+  }
+  
+  $self->_generate($shell);
+}
+
+sub _generate
+{
+  my($self, $shell) = @_;
   
   my $buffer = '';
   my $sep    = $shell->is_win32 ? ';' : ':';

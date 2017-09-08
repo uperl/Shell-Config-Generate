@@ -13,6 +13,8 @@ $modules{$_} = $_ for qw(
   ExtUtils::MakeMaker
   Shell::Guess
   Test2::API
+  Test2::Mock
+  Test2::V0
   Test::More
 );
 
