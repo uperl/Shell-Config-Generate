@@ -31,4 +31,6 @@ script: dzil test -v
 sudo: false
 
 env:
-  - PATH=$HOME/travislocal/bin:$PATH
+  global:
+    - PERL_USE_UNSAFE_INC=0
+    - PATH=$HOME/travislocal/bin:$PATH
