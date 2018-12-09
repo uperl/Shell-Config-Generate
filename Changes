@@ -2,6 +2,9 @@ Revision history for {{$dist->name}}
 
 {{$NEXT}}
 
+0.33      2018-12-09 06:33:53 -0500
+  - Production release identical to 0.32_01
+
 0.32_01   2018-12-06 16:49:11 -0500
   - Test against PowerShell on Unix (pwsh) when found
 
