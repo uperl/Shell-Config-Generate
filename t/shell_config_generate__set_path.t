@@ -31,6 +31,7 @@ foreach my $sep (undef, ':', ';', '|')
         skip_all "no $shell found" unless defined $shell_path;
 
         my $env = get_env($config, $shell, $shell_path);
+        return unless defined $env;
 
         is [split /$path_sep_regex/, $env->{FOO_PATH1}], [qw( foo bar baz )], "[$shell] FOO_PATH = foo bar baz";
       }

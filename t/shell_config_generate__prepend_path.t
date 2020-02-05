@@ -42,6 +42,7 @@ foreach my $sep (undef, ':', ';', '|')
           && bad_fish($shell_path);
 
         my $env = get_env($config, $shell, $shell_path);
+        return unless defined $env;
 
         is [split /$path_sep_regex/, $env->{FOO_PATH1}], [qw( foo bar baz )], "[$shell] FOO_PATH1 = foo bar baz";
         is [split /$path_sep_regex/, $env->{FOO_PATH2}], [qw( foo bar baz )], "[$shell] FOO_PATH2 = foo bar baz";
