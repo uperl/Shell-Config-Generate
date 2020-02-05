@@ -42,6 +42,7 @@ foreach my $shell (qw( tcsh csh bsd-csh bash sh zsh cmd.exe command.com ksh 44bs
     skip_all "skipping powershell on msys"
       if $shell eq 'powershell.exe' && $^O =~ /^(msys)$/;
     my $list = get_env($config, $shell, $shell_path, 'myecho1 one two three');
+    return unless defined $list;
     is $list, [ qw( f00f one two three )], 'arguments match';
   };
 }
@@ -62,6 +63,7 @@ subtest 'powershell.exe' => sub {
   skip_all "no powershell.exe found" unless defined $shell_path;
 
   my $list = get_env($config, $shell, $shell_path, 'myecho1 one two three');
+  return unless defined $list;
   is $list, [ qw( f00f one two three )], 'arguments match';
 };
 

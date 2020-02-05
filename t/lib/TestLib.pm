@@ -176,34 +176,49 @@ sub get_env
     $output = `$fn`;
   }
 
-  my $fail = 0;
-  if ($? == -1)
+  my $fail = $?;
+
+  unless($fail)
   {
-    $ctx->diag("failed to execute: $!\n");
-    $fail = 1;
-  }
-  elsif ($? & 127) {
-    $ctx->diag("child died with signal ", $? & 127);
-    $fail = 1;
-  }
-  elsif($? >> 8)
-  {
-    $ctx->diag("child exited with value ", $? >> 8);
-    $fail = 1;
+    eval $output;
   }
 
-  if($fail)
-  {
-    if ($^O =~ /^(MSWin32|msys)$/) {
-      $ctx->diag("[src]\n" . `type $fn`);
-    }
-    else {
-      $ctx->diag("[src]\n" . `cat $fn`);
-    }
-    $ctx->diag("[out]\n$output");
-  }
+  my $error = $@;
 
-  eval $output;
+  if($fail || $error)
+  {
+    $ctx->fail("execute/eval");
+    if ($fail == -1)
+    {
+      $ctx->diag("failed to execute: $!\n");
+    }
+    elsif ($fail & 127) {
+      $ctx->diag("child died with signal ", $fail & 127);
+      $fail = 1;
+    }
+    elsif($fail >> 8)
+    {
+      $ctx->diag("child exited with value ", $fail >> 8);
+      $fail = 1;
+    }
+    $ctx->diag("error:      $error");
+    $ctx->diag("shell path: $shell_path");
+    $ctx->diag("[src-begin]");
+    {
+      my $fh;
+      open $fh, '<', $fn;
+      $ctx->diag(do { local $/; <$fh> });
+      close $fh;
+    }
+    $ctx->diag("[src-end]");
+    $ctx->diag("[out-begin]");
+    $ctx->diag(defined $output ? $output : '#undef');
+    $ctx->diag("[out-end]");
+  }
+  else
+  {
+    $ctx->pass("eval");
+  }
 
   $ctx->release;
 
