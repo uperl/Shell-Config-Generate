@@ -1,4 +1,4 @@
-# Shell::Config::Generate [![Build Status](https://secure.travis-ci.org/plicease/Shell-Config-Generate.png)](http://travis-ci.org/plicease/Shell-Config-Generate)
+# Shell::Config::Generate [![Build Status](https://secure.travis-ci.org/plicease/Shell-Config-Generate.png)](http://travis-ci.org/plicease/Shell-Config-Generate) ![macos](https://github.com/plicease/Shell-Config-Generate/workflows/macos/badge.svg) ![windows](https://github.com/plicease/Shell-Config-Generate/workflows/windows/badge.svg)
 
 Portably generate config for any shell
 
@@ -6,61 +6,75 @@ Portably generate config for any shell
 
 With this start up:
 
-    use Shell::Guess;
-    use Shell::Config::Generate;
-    
-    my $config = Shell::Config::Generate->new;
-    $config->comment( 'this is my config file' );
-    $config->set( FOO => 'bar' );
-    $config->set_path(
-      PERL5LIB => '/foo/bar/lib/perl5',
-                  '/foo/bar/lib/perl5/perl5/site',
-    );
-    $config->append_path(
-      PATH => '/foo/bar/bin',
-              '/bar/foo/bin',
-    );
+```perl
+use Shell::Guess;
+use Shell::Config::Generate;
+
+my $config = Shell::Config::Generate->new;
+$config->comment( 'this is my config file' );
+$config->set( FOO => 'bar' );
+$config->set_path(
+  PERL5LIB => '/foo/bar/lib/perl5',
+              '/foo/bar/lib/perl5/perl5/site',
+);
+$config->append_path(
+  PATH => '/foo/bar/bin',
+          '/bar/foo/bin',
+);
+```
 
 This:
 
-    $config->generate_file(Shell::Guess->bourne_shell, 'config.sh');
+```
+$config->generate_file(Shell::Guess->bourne_shell, 'config.sh');
+```
 
 will generate a config.sh file with this:
 
-    # this is my config file
-    FOO='bar';
-    export FOO;
-    PERL5LIB='/foo/bar/lib/perl5:/foo/bar/lib/perl5/perl5/site';
-    export PERL5LIB;
-    if [ -n "$PATH" ] ; then
-      PATH=$PATH:'/foo/bar/bin:/bar/foo/bin';
-      export PATH
-    else
-      PATH='/foo/bar/bin:/bar/foo/bin';
-      export PATH;
-    fi;
+```perl
+# this is my config file
+FOO='bar';
+export FOO;
+PERL5LIB='/foo/bar/lib/perl5:/foo/bar/lib/perl5/perl5/site';
+export PERL5LIB;
+if [ -n "$PATH" ] ; then
+  PATH=$PATH:'/foo/bar/bin:/bar/foo/bin';
+  export PATH
+else
+  PATH='/foo/bar/bin:/bar/foo/bin';
+  export PATH;
+fi;
+```
 
 and this:
 
-    $config->generate_file(Shell::Guess->c_shell, 'config.csh');
+```
+$config->generate_file(Shell::Guess->c_shell, 'config.csh');
+```
 
 will generate a config.csh with this:
 
-    # this is my config file
-    setenv FOO 'bar';
-    setenv PERL5LIB '/foo/bar/lib/perl5:/foo/bar/lib/perl5/perl5/site';
-    test "$?PATH" = 0 && setenv PATH '/foo/bar/bin:/bar/foo/bin' || setenv PATH "$PATH":'/foo/bar/bin:/bar/foo/bin';
+```perl
+# this is my config file
+setenv FOO 'bar';
+setenv PERL5LIB '/foo/bar/lib/perl5:/foo/bar/lib/perl5/perl5/site';
+test "$?PATH" = 0 && setenv PATH '/foo/bar/bin:/bar/foo/bin' || setenv PATH "$PATH":'/foo/bar/bin:/bar/foo/bin';
+```
 
 and this:
 
-    $config->generate_file(Shell::Guess->cmd_shell, 'config.cmd');
+```
+$config->generate_file(Shell::Guess->cmd_shell, 'config.cmd');
+```
 
 will generate a `config.cmd` (Windows `cmd.exe` script) with this:
 
-    rem this is my config file
-    set FOO=bar
-    set PERL5LIB=/foo/bar/lib/perl5;/foo/bar/lib/perl5/perl5/site
-    if defined PATH (set PATH=%PATH%;/foo/bar/bin;/bar/foo/bin) else (set PATH=/foo/bar/bin;/bar/foo/bin)
+```perl
+rem this is my config file
+set FOO=bar
+set PERL5LIB=/foo/bar/lib/perl5;/foo/bar/lib/perl5/perl5/site
+if defined PATH (set PATH=%PATH%;/foo/bar/bin;/bar/foo/bin) else (set PATH=/foo/bar/bin;/bar/foo/bin)
+```
 
 # DESCRIPTION
 
@@ -75,64 +89,82 @@ This module uses [Shell::Guess](https://metacpan.org/pod/Shell::Guess) to repres
 of shells that are supported.  In this way you can statically specify
 just one or more shells:
 
-    #!/usr/bin/perl
-    use Shell::Guess;
-    use Shell::Config::Generate;
-    my $config = Shell::Config::Generate->new;
-    # ... config config ...
-    $config->generate_file(Shell::Guess->bourne_shell,  'foo.sh' );
-    $config->generate_file(Shell::Guess->c_shell,       'foo.csh');
-    $config->generate_file(Shell::Guess->cmd_shell,     'foo.cmd');
-    $config->generate_file(Shell::Guess->command_shell, 'foo.bat');
+```perl
+#!/usr/bin/perl
+use Shell::Guess;
+use Shell::Config::Generate;
+my $config = Shell::Config::Generate->new;
+# ... config config ...
+$config->generate_file(Shell::Guess->bourne_shell,  'foo.sh' );
+$config->generate_file(Shell::Guess->c_shell,       'foo.csh');
+$config->generate_file(Shell::Guess->cmd_shell,     'foo.cmd');
+$config->generate_file(Shell::Guess->command_shell, 'foo.bat');
+```
 
 This will create foo.sh and foo.csh versions of the configurations,
 which can be sourced like so:
 
-    #!/bin/sh
-    . ./foo.sh
+```
+#!/bin/sh
+. ./foo.sh
+```
 
 or
 
-    #!/bin/csh
-    source foo.csh
+```
+#!/bin/csh
+source foo.csh
+```
 
 It also creates `.cmd` and `.bat` files with the same configuration
 which can be used in Windows.  The configuration can be imported back
 into your shell by simply executing these files:
 
-    C:\> foo.cmd
+```
+C:\> foo.cmd
+```
 
 or
 
-    C:\> foo.bat
+```
+C:\> foo.bat
+```
 
 Alternatively you can use the shell that called your Perl script using
 [Shell::Guess](https://metacpan.org/pod/Shell::Guess)'s `running_shell` method, and write the output to
 standard out.
 
-    #!/usr/bin/perl
-    use Shell::Guess;
-    use Shell::Config::Generate;
-    my $config = Shell::Config::Generate->new;
-    # ... config config ...
-    print $config->generate(Shell::Guess->running_shell);
+```perl
+#!/usr/bin/perl
+use Shell::Guess;
+use Shell::Config::Generate;
+my $config = Shell::Config::Generate->new;
+# ... config config ...
+print $config->generate(Shell::Guess->running_shell);
+```
 
 If you use this pattern, you can eval the output of your script using
 your shell's back ticks to import the configuration into the shell.
 
-    #!/bin/sh
-    eval `script.pl`
+```
+#!/bin/sh
+eval `script.pl`
+```
 
 or
 
-    #!/bin/csh
-    eval `script.pl`
+```
+#!/bin/csh
+eval `script.pl`
+```
 
 # CONSTRUCTOR
 
 ## new
 
-    my $config = Shell::Config::Generate->new;
+```perl
+my $config = Shell::Config::Generate->new;
+```
 
 creates an instance of She::Config::Generate.
 
@@ -160,13 +192,17 @@ generation script written in Perl.
 
 ## set
 
-    $config->set( $name => $value );
+```perl
+$config->set( $name => $value );
+```
 
 Set an environment variable.
 
 ## set\_path
 
-    $config->set_path( $name => @values );
+```perl
+$config->set_path( $name => @values );
+```
 
 Sets an environment variable which is stored in standard
 'path' format (Like PATH or PERL5LIB).  In UNIX land this 
@@ -180,7 +216,9 @@ exists.
 
 ## append\_path
 
-    $config->append_path( $name => @values );
+```perl
+$config->append_path( $name => @values );
+```
 
 Appends to an environment variable which is stored in standard
 'path' format.  This will create a new environment variable if
@@ -188,7 +226,9 @@ it doesn't already exist, or add to an existing value.
 
 ## prepend\_path
 
-    $config->prepend_path( $name => @values );
+```perl
+$config->prepend_path( $name => @values );
+```
 
 Prepend to an environment variable which is stored in standard
 'path' format.  This will create a new environment variable if
@@ -196,7 +236,9 @@ it doesn't already exist, or add to an existing value.
 
 ## comment
 
-    $config->comment( $comment );
+```
+$config->comment( $comment );
+```
 
 This will generate a comment in the appropriate format.
 
@@ -206,8 +248,10 @@ configurations into your shell.
 
 ## shebang
 
-    $config->shebang;
-    $config->shebang($location);
+```
+$config->shebang;
+$config->shebang($location);
+```
 
 This will generate a shebang at the beginning of the configuration,
 making it appropriate for use as a script.  For non UNIX shells this
@@ -221,23 +265,31 @@ configurations into your shell.
 
 ## echo\_off
 
-    $config->echo_off;
+```
+$config->echo_off;
+```
 
 For DOS/Windows configurations (`command.com` or `cmd.exe`), issue this as the
 first line of the config:
 
-    @echo off
+```
+@echo off
+```
 
 ## echo\_on
 
-    $config->echo_on;
+```
+$config->echo_on;
+```
 
 Turn off the echo off (that is do not put anything at the beginning of
 the config) for DOS/Windows configurations (`command.com` or `cmd.exe`).
 
 ## set\_alias
 
-    $config->set_alias( $alias => $command )
+```perl
+$config->set_alias( $alias => $command )
+```
 
 Sets the given alias to the given command.
 
@@ -254,7 +306,9 @@ may be specified.
 
 ## set\_path\_sep
 
-    $config->set_path_sep( $sep );
+```
+$config->set_path_sep( $sep );
+```
 
 Use `$sep` as the path separator instead of the shell
 default path separator (generally `:` for Unix shells 
@@ -265,8 +319,10 @@ to stick with the shell default or to use `:` or `;`.
 
 ## generate
 
-    my $command_text = $config->generate;
-    my $command_text = $config->generate( $shell );
+```perl
+my $command_text = $config->generate;
+my $command_text = $config->generate( $shell );
+```
 
 Generate shell configuration code for the given shell.
 `$shell` is an instance of [Shell::Guess](https://metacpan.org/pod/Shell::Guess).  If `$shell`
@@ -281,7 +337,9 @@ would pass in `"c"` and for tcsh you would pass in
 
 ## generate\_file
 
-    $config->generate_file( $shell, $filename );
+```
+$config->generate_file( $shell, $filename );
+```
 
 Generate shell configuration code for the given shell
 and write it to the given file.  `$shell` is an instance 
@@ -292,7 +350,9 @@ an exception.
 
 ## win32\_space\_be\_gone
 
-    my @new_path_list = win32_space_be_gone( @orig_path_list );
+```perl
+my @new_path_list = win32_space_be_gone( @orig_path_list );
+```
 
 On `MSWin32` and `cygwin`:
 
@@ -318,14 +378,18 @@ Returns the same list passed into it
 
 ## cmd\_escape\_path
 
-    my @new_path_list = cmd_escape_path( @orig_path_list )
+```perl
+my @new_path_list = cmd_escape_path( @orig_path_list )
+```
 
 Given a list of directory paths (or filenames), this will
 return an equivalent list of paths escaped for cmd.exe and command.com.
 
 ## powershell\_escape\_path
 
-    my @new_path_list = powershell_escape_path( @orig_path_list )
+```perl
+my @new_path_list = powershell_escape_path( @orig_path_list )
+```
 
 Given a list of directory paths (or filenames), this will
 return an equivalent list of paths escaped for PowerShell.
@@ -348,7 +412,9 @@ an external command in `csh`, then a patch would be appreciated.
 The incantation for prepending and appending elements to a path
 on csh probably deserve a comment here.  It looks like this:
 
-    test "$?PATH" = 0 && setenv PATH '/foo/bar/bin:/bar/foo/bin' || setenv PATH "$PATH":'/foo/bar/bin:/bar/foo/bin';
+```
+test "$?PATH" = 0 && setenv PATH '/foo/bar/bin:/bar/foo/bin' || setenv PATH "$PATH":'/foo/bar/bin:/bar/foo/bin';
+```
 
 - one line
 
@@ -356,11 +422,13 @@ on csh probably deserve a comment here.  It looks like this:
     probably more clear and ideomatic.  This for example, might 
     make more sense:
 
-        if ( $?PATH == 0 ) then
-          setenv PATH '/foo/bar/bin:/bar/foo/bin' 
-        else
-          setenv PATH "$PATH":'/foo/bar/bin:/bar/foo/bin'
-        endif
+    ```
+    if ( $?PATH == 0 ) then
+      setenv PATH '/foo/bar/bin:/bar/foo/bin' 
+    else
+      setenv PATH "$PATH":'/foo/bar/bin:/bar/foo/bin'
+    endif
+    ```
 
     However, this only works if the code interpreted using the csh
     `source` command or is included in a csh script inline.  If you 
