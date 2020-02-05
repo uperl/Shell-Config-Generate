@@ -79,7 +79,7 @@ if defined PATH (set PATH=%PATH%;/foo/bar/bin;/bar/foo/bin) else (set PATH=/foo/
 # DESCRIPTION
 
 This module provides an interface for specifying shell configurations
-for different shell environments without having to worry about the 
+for different shell environments without having to worry about the
 arcane differences between shells such as csh, sh, cmd.exe and command.com.
 
 It does not modify the current environment, but it can be used to
@@ -182,8 +182,8 @@ There are two types of instance methods for this class:
     the internal portable format stored inside the instance.
 
 The idea is that you can create multiple modifications
-to the environment without worrying about specific shells, 
-then when you are done you can create shell specific 
+to the environment without worrying about specific shells,
+then when you are done you can create shell specific
 versions of those modifications using the generators.
 
 This may be useful for system administrators that must support
@@ -205,8 +205,8 @@ $config->set_path( $name => @values );
 ```
 
 Sets an environment variable which is stored in standard
-'path' format (Like PATH or PERL5LIB).  In UNIX land this 
-is a colon separated list stored as a string.  In Windows 
+'path' format (Like PATH or PERL5LIB).  In UNIX land this
+is a colon separated list stored as a string.  In Windows
 this is a semicolon separated list stored as a string.
 You can do the same thing using the `set` method, but if
 you do so you have to determine the correct separator.
@@ -255,7 +255,7 @@ $config->shebang($location);
 
 This will generate a shebang at the beginning of the configuration,
 making it appropriate for use as a script.  For non UNIX shells this
-will be ignored.  If specified, `$location` will be used as the 
+will be ignored.  If specified, `$location` will be used as the
 interpreter location.  If it is not specified, then the default
 location for the shell will be used.
 
@@ -311,7 +311,7 @@ $config->set_path_sep( $sep );
 ```
 
 Use `$sep` as the path separator instead of the shell
-default path separator (generally `:` for Unix shells 
+default path separator (generally `:` for Unix shells
 and `;` for Windows shells).
 
 Not all characters are supported, it is usually best
@@ -342,7 +342,7 @@ $config->generate_file( $shell, $filename );
 ```
 
 Generate shell configuration code for the given shell
-and write it to the given file.  `$shell` is an instance 
+and write it to the given file.  `$shell` is an instance
 of [Shell::Guess](https://metacpan.org/pod/Shell::Guess).  If there is an IO error it will throw
 an exception.
 
@@ -357,8 +357,8 @@ my @new_path_list = win32_space_be_gone( @orig_path_list );
 On `MSWin32` and `cygwin`:
 
 Given a list of directory paths (or filenames), this will
-return an equivalent list of paths pointing to the same 
-file system objects without spaces.  To do this 
+return an equivalent list of paths pointing to the same
+file system objects without spaces.  To do this
 `Win32::GetShortPathName()` is used on to find alternative
 path names without spaces.
 
@@ -418,24 +418,24 @@ test "$?PATH" = 0 && setenv PATH '/foo/bar/bin:/bar/foo/bin' || setenv PATH "$PA
 
 - one line
 
-    The command is all on one line, and doesn't use if, which is 
-    probably more clear and ideomatic.  This for example, might 
+    The command is all on one line, and doesn't use if, which is
+    probably more clear and ideomatic.  This for example, might
     make more sense:
 
     ```
     if ( $?PATH == 0 ) then
-      setenv PATH '/foo/bar/bin:/bar/foo/bin' 
+      setenv PATH '/foo/bar/bin:/bar/foo/bin'
     else
       setenv PATH "$PATH":'/foo/bar/bin:/bar/foo/bin'
     endif
     ```
 
     However, this only works if the code interpreted using the csh
-    `source` command or is included in a csh script inline.  If you 
+    `source` command or is included in a csh script inline.  If you
     try to invoke this code using csh `eval` then it will helpfully
     convert it to one line and if does not work under csh in one line.
 
-There are probably more clever or prettier ways to 
+There are probably more clever or prettier ways to
 append/prepend path environment variables as I am not a shell
 programmer.  Patches welcome.
 
