@@ -16,7 +16,7 @@ our @EXPORT = qw( find_shell tempdir get_env bad_fish );
 sub shell_is_okay
 {
   my($shell, $full_path) = @_;
-  
+
   if($shell =~ /^(jsh|fish)$/ && -x $full_path)
   {
     require IPC::Open3;
@@ -29,7 +29,7 @@ sub shell_is_okay
     $ctx->release;
     return $? >> 8 == 22;
   }
-  
+
   if($shell =~ /^powershell.exe$/ && -e $full_path)
   {
     return 0 if $ENV{ACTIVESTATE_PPM_BUILD};
@@ -52,7 +52,7 @@ sub find_shell
     my $full = File::Spec->catfile($path, $shell);
     return $full if shell_is_okay($shell, $full);
   }
-  
+
   return;
 }
 
@@ -111,7 +111,7 @@ sub get_env
   my $shell_path = shift;
 
   my $ctx = context();
-  
+
   my $fn = 'foo';
   $fn .= ".bat" if $shell->is_command;
   $fn .= ".cmd" if $shell->is_cmd;
@@ -148,7 +148,7 @@ sub get_env
     }
     print $fh "exit\n" if $shell->is_power;
   };
-  
+
   chmod 0700, $fn;
 
   my $VAR1;
@@ -175,8 +175,8 @@ sub get_env
   {
     $output = `$fn`;
   }
-  
-  my $fail = 0;  
+
+  my $fail = 0;
   if ($? == -1)
   {
     $ctx->diag("failed to execute: $!\n");
@@ -191,7 +191,7 @@ sub get_env
     $ctx->diag("child exited with value ", $? >> 8);
     $fail = 1;
   }
-  
+
   if($fail)
   {
     if ($^O =~ /^(MSWin32|msys)$/) {
@@ -202,11 +202,11 @@ sub get_env
     }
     $ctx->diag("[out]\n$output");
   }
-  
+
   eval $output;
 
   $ctx->release;
-  
+
   return $VAR1;
 }
 
@@ -214,13 +214,13 @@ sub bad_fish
 {
   my $path = shift;
   my $dir = File::Spec->catdir(tempdir( CLEANUP => 1 ), qw( one two three ));
-  
+
   require IPC::Open3;
   my $pid = IPC::Open3::open3(\*IN, \*OUT, \*ERR, $path, -c => "setenv PATH \$PATH $dir");
   waitpid $pid, $?;
-  
+
   my $str = do { local $/; <ERR> };
-  
+
   $? != 0;
 }
 

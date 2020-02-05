@@ -6,7 +6,7 @@ use TestLib;
 tempdir();
 
 my $config = eval { Shell::Config::Generate->new };
-  
+
 isa_ok $config, 'Shell::Config::Generate';
 
 my $ret = eval { $config->set( FOO_SIMPLE_SET => 'bar' ) };
@@ -40,7 +40,7 @@ foreach my $shell (qw( tcsh csh bsd-csh bash sh zsh cmd.exe command.com ksh 44bs
       },
       $shell,
     ;
-    
+
   }
 }
 

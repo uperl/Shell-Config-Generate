@@ -9,7 +9,7 @@ foreach my $sep (undef, ':', ';', '|')
 {
   subtest "sep = " . ($sep||'undef') => sub {
     my $config = eval { Shell::Config::Generate->new };
-  
+
     isa_ok $config, 'Shell::Config::Generate';
 
     SKIP: {
@@ -17,7 +17,7 @@ foreach my $sep (undef, ':', ';', '|')
       eval { $config->set_path_sep($sep) };
       is $@, '', 'set_path_sep';
     };
-    
+
     my $path_sep_regex = defined $sep ? quotemeta $sep : ';|:';
     $ENV{FOO_PATH1} = "foo" . (${sep}||':') . "bar";
 

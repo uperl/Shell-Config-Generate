@@ -9,15 +9,15 @@ foreach my $sep (undef, ':', ';', '|')
 {
   subtest "sep = " . ($sep||'undef') => sub {
     my $config = eval { Shell::Config::Generate->new };
-  
+
     isa_ok $config, 'Shell::Config::Generate';
-    
+
     SKIP: {
       skip "using default path sep", 1 unless defined $sep;
       eval { $config->set_path_sep($sep) };
       is $@, '', 'set_path_sep';
     };
-    
+
     my $path_sep_regex = defined $sep ? quotemeta $sep : ';|:';
 
     my $ret = eval { $config->set_path( FOO_PATH1 => qw( foo bar baz ) ) };
