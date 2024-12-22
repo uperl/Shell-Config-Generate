@@ -1,2 +1,4 @@
 /Shell-Config-Generate-*
 /.build
+*.old
+*.orig
