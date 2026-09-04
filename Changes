@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.35      2026-09-04 09:54:50 -0600
   - Add unset method to remove environment variables (gh#14, gh#27, gh#30)
   - set_alias now accepts an array reference of words, quoting each
     one individually so embedded spaces are preserved (gh#17, gh#30)
