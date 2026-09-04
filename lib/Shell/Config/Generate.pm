@@ -400,6 +400,34 @@ sub _value_escape_powershell
   $value;
 }
 
+sub _quote_word_sh
+{
+  "'" . _value_escape_sh(shift) . "'";
+}
+
+sub _quote_word_csh
+{
+  "'" . _value_escape_csh(shift) . "'";
+}
+
+sub _quote_word_fish
+{
+  "'" . _value_escape_fish(shift) . "'";
+}
+
+sub _quote_word_win32
+{
+  my $value = _value_escape_win32(shift);
+  $value =~ /\s/ ? qq{"$value"} : $value;
+}
+
+sub _quote_word_powershell
+{
+  my $value = shift() . '';
+  $value =~ s/(')/''/g;
+  "'$value'";
+}
+
 =head2 unset
 
  $config->unset( $name );
@@ -420,8 +448,25 @@ sub unset
 =head2 set_alias
 
  $config->set_alias( $alias => $command )
+ $config->set_alias( $alias => \@command )
 
 Sets the given alias to the given command.
+
+C<$command> may also be given as an array reference of words
+(a command name followed by its arguments).  This works just
+like the plain string form, except that each word is quoted
+individually, so any spaces embedded in a word will be preserved
+as part of that word instead of being treated as a word separator.
+
+B<note> that C<csh> and C<tcsh> aliases work by splicing the
+alias text back into the command line and re-tokenizing it on
+whitespace, with no surviving quoting mechanism, so embedded
+spaces in a word cannot be protected on those shells even when
+C<$command> is given as an array reference.  Rather than silently
+generating an alias that will not work as expected, C<generate>
+and C<generate_file> will throw an exception with a helpful
+message if any word contains a space and the target shell is
+C<csh> or C<tcsh>.
 
 Caveat:
 some older shells do not support aliases, such as
@@ -690,25 +735,62 @@ sub _generate
 
     elsif($command eq 'alias')
     {
+      my($alias, $cmd) = @$args;
+      my @words = ref($cmd) eq 'ARRAY' ? @$cmd : ();
+
       if($shell->is_bourne)
       {
-        $buffer .= "alias $args->[0]=\"$args->[1]\";\n";
+        my $value = @words ? join(' ', map { _quote_word_sh($_) } @words) : $cmd;
+        $buffer .= "alias $alias=\"$value\";\n";
       }
       elsif($shell->is_c)
       {
-        $buffer .= "alias $args->[0] $args->[1];\n";
+        my $value;
+        if(@words)
+        {
+          for(@words)
+          {
+            croak "cannot generate alias '$alias' for " . $shell->name
+              . ": word '$_' contains a space, which is not supported"
+              . " for alias commands on csh/tcsh"
+              if /\s/;
+          }
+          $value = join ' ', map { _quote_word_csh($_) } @words;
+        }
+        else
+        {
+          $value = $cmd;
+        }
+        $buffer .= "alias $alias $value;\n";
       }
       elsif($shell->is_cmd || $shell->is_command)
       {
-        $buffer .= "DOSKEY $args->[0]=$args->[1] \$*\n";
+        my $value = @words ? join(' ', map { _quote_word_win32($_) } @words) : $cmd;
+        $buffer .= "DOSKEY $alias=$value \$*\n";
       }
       elsif($shell->is_power)
       {
-        $buffer .= sprintf("function %s { %s \$args }\n", $args->[0], _value_escape_powershell($args->[1]));
+        if(@words)
+        {
+          my $value = join ' ', map { _quote_word_powershell($_) } @words;
+          $buffer .= sprintf("function %s { & %s \$args }\n", $alias, $value);
+        }
+        else
+        {
+          $buffer .= sprintf("function %s { %s \$args }\n", $alias, _value_escape_powershell($cmd));
+        }
       }
       elsif($shell->is_fish)
       {
-        $buffer .= "alias $args->[0] '$args->[1]';\n";
+        if(@words)
+        {
+          my $value = join ' ', map { _quote_word_fish($_) } @words;
+          $buffer .= "alias $alias \"$value\";\n";
+        }
+        else
+        {
+          $buffer .= "alias $alias '$cmd';\n";
+        }
       }
       else
       {
