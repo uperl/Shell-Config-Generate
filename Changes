@@ -1,7 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
-  - Add unset method to remove environment variables (gh#27)
+  - Add unset method to remove environment variables (gh#14, gh#27, gh#30)
 
 0.34      2020-02-05 10:20:27 -0700
   - Better diagnostics in testing (gh#22)
