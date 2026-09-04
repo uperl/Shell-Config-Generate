@@ -459,7 +459,7 @@ individually, so any spaces embedded in a word will be preserved
 as part of that word instead of being treated as a word separator.
 
 B<note> that C<csh> and C<tcsh> aliases work by splicing the
-alias text back into the command line and re-tokenizing it on
+alias text back into the command line and splitting it again on
 whitespace, with no surviving quoting mechanism, so embedded
 spaces in a word cannot be protected on those shells even when
 C<$command> is given as an array reference.  Rather than silently
