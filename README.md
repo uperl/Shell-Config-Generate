@@ -297,9 +297,26 @@ Unset (remove) an environment variable.
 
 ```perl
 $config->set_alias( $alias => $command )
+$config->set_alias( $alias => \@command )
 ```
 
 Sets the given alias to the given command.
+
+`$command` may also be given as an array reference of words
+(a command name followed by its arguments).  This works just
+like the plain string form, except that each word is quoted
+individually, so any spaces embedded in a word will be preserved
+as part of that word instead of being treated as a word separator.
+
+**note** that `csh` and `tcsh` aliases work by splicing the
+alias text back into the command line and splitting it again on
+whitespace, with no surviving quoting mechanism, so embedded
+spaces in a word cannot be protected on those shells even when
+`$command` is given as an array reference.  Rather than silently
+generating an alias that will not work as expected, `generate`
+and `generate_file` will throw an exception with a helpful
+message if any word contains a space and the target shell is
+`csh` or `tcsh`.
 
 Caveat:
 some older shells do not support aliases, such as
