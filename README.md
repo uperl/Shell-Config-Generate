@@ -285,6 +285,14 @@ $config->echo_on;
 Turn off the echo off (that is do not put anything at the beginning of
 the config) for DOS/Windows configurations (`command.com` or `cmd.exe`).
 
+## unset
+
+```
+$config->unset( $name );
+```
+
+Unset (remove) an environment variable.
+
 ## set\_alias
 
 ```perl
@@ -462,7 +470,7 @@ mohawk
 
 # COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2017 by Graham Ollis.
+This software is copyright (c) 2017-2026 by Graham Ollis.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
