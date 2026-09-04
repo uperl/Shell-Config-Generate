@@ -1,4 +1,4 @@
-# Shell::Config::Generate ![linux](https://github.com/plicease/Shell-Config-Generate/workflows/linux/badge.svg) ![macos](https://github.com/plicease/Shell-Config-Generate/workflows/macos/badge.svg) ![windows](https://github.com/plicease/Shell-Config-Generate/workflows/windows/badge.svg) ![cygwin](https://github.com/plicease/Shell-Config-Generate/workflows/cygwin/badge.svg) ![msys2-mingw](https://github.com/plicease/Shell-Config-Generate/workflows/msys2-mingw/badge.svg)
+# Shell::Config::Generate ![linux](https://github.com/plicease/Shell-Config-Generate/workflows/linux/badge.svg) ![macos](https://github.com/plicease/Shell-Config-Generate/workflows/macos/badge.svg) ![windows](https://github.com/plicease/Shell-Config-Generate/workflows/windows/badge.svg)
 
 Portably generate config for any shell
 
