@@ -400,6 +400,23 @@ sub _value_escape_powershell
   $value;
 }
 
+=head2 unset
+
+ $config->unset( $name );
+
+Unset (remove) an environment variable.
+
+=cut
+
+sub unset
+{
+  my($self, $name) = @_;
+
+  push @{ $self->{commands} }, ['unset', $name];
+
+  $self;
+}
+
 =head2 set_alias
 
  $config->set_alias( $alias => $command )
@@ -623,6 +640,35 @@ sub _generate
       else
       {
         croak 'don\'t know how to "append_path" with ' . $shell->name;
+      }
+    }
+
+    elsif($command eq 'unset')
+    {
+      my($name) = @$args;
+      if($shell->is_c)
+      {
+        $buffer .= "unsetenv $name;\n";
+      }
+      elsif($shell->is_fish)
+      {
+        $buffer .= "set -e $name;\n";
+      }
+      elsif($shell->is_bourne)
+      {
+        $buffer .= "unset $name;\n";
+      }
+      elsif($shell->is_cmd || $shell->is_command)
+      {
+        $buffer .= "set $name=\n";
+      }
+      elsif($shell->is_power)
+      {
+        $buffer .= "Remove-Item -Path Env:\\$name -ErrorAction SilentlyContinue\n";
+      }
+      else
+      {
+        croak 'don\'t know how to "unset" with ' . $shell->name;
       }
     }
 
