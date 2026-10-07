@@ -4,9 +4,9 @@ Revision history for {{$dist->name}}
   - Fix test failures under WSL2 by filtering Windows paths from PATH
     (gh#31, gh#32)
   - win32_space_be_gone returns the original path unchanged if no short
-    (8+3) name without spaces is available (gh#13, gh#28)
+    (8+3) name without spaces is available (gh#13, gh#28, gh#33)
   - Test suite no longer relies on short (8+3) names on Windows, and
-    quotes paths with spaces instead (gh#13, gh#28)
+    quotes paths with spaces instead (gh#13, gh#28, gh#33)
 
 0.35      2026-09-04 09:54:50 -0600
   - Add unset method to remove environment variables (gh#14, gh#27, gh#30)
