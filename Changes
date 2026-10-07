@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - Fix test failures under WSL2 by filtering Windows paths from PATH
+    (gh#31, gh#32)
 
 0.35      2026-09-04 09:54:50 -0600
   - Add unset method to remove environment variables (gh#14, gh#27, gh#30)
